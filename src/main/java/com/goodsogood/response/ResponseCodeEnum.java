@@ -1,12 +1,10 @@
 package com.goodsogood.response;
 
-import lombok.Data;
-
 /**
  * 作者：chenhao
  * 日期：12/15/20 9:30 AM
  **/
-public enum VdianResponseCodeEnum {
+public enum ResponseCodeEnum {
 
     SUCCESS_RESPONSE(0,"成功"),
     REQUEST_HEADER_ERROR(9900,"请求头错误"),
@@ -21,7 +19,7 @@ public enum VdianResponseCodeEnum {
     private Integer code;
     private String desc;
 
-    VdianResponseCodeEnum(Integer code, String desc) {
+    ResponseCodeEnum(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
     }

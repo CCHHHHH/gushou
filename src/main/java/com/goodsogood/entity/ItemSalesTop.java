@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * 作者：chenhao
  * 日期：12/16/20 5:15 PM
+ * top接口返回实体
  **/
 @Data
 public class ItemSalesTop {
