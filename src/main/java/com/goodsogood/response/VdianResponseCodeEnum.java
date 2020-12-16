@@ -1,4 +1,4 @@
-package com.goodsogood.utils;
+package com.goodsogood.response;
 
 import lombok.Data;
 

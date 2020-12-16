@@ -1,4 +1,4 @@
-package com.goodsogood.utils;
+package com.goodsogood.response;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ public class BaseResponse {
 	private Object data;
     private Integer statusCode;
 	private String repMessage;
-	private Integer ERROR_CODE;
+	private Integer errorCode;
 
     public static BaseResponse initErrorBaseResponse(String baseMessage,Integer code){
         BaseResponse baseResponse = new BaseResponse();
