@@ -3,6 +3,11 @@ package com.goodsogood.gushou;
 import com.alibaba.fastjson.JSONObject;
 import com.goodsogood.GushouApplication;
 import com.goodsogood.config.VdianGetToken;
+import com.goodsogood.entity.ItemSales;
+import com.goodsogood.entity.ItemSalesTop;
+import com.goodsogood.entity.Items;
+import com.goodsogood.service.VdianService;
+import com.goodsogood.utils.GushouRestUtil;
 import com.goodsogood.utils.VdianRestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +23,12 @@ class GushouApplicationTests {
 
     @Autowired
     private VdianRestUtil vdianRestUtil;
+
+    @Autowired
+    private VdianService vdianService;
+
+    @Autowired
+    private GushouRestUtil gushouRestUtil;
 
     @Test
     void contextLoads() {
@@ -44,6 +55,18 @@ class GushouApplicationTests {
 
         System.out.println(result);
 
+    }
+
+    @Test
+    public void getItemDetail(){
+        ItemSalesTop itemDetail = vdianService.getItemDetail("4235279917");
+        System.out.println(itemDetail);
+    }
+
+    @Test
+    public void getGushouToken(){
+        String token = gushouRestUtil.getToken();
+        System.out.println(token);
     }
 
 }

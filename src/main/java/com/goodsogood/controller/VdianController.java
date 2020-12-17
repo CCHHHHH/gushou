@@ -3,6 +3,8 @@ package com.goodsogood.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.goodsogood.config.VdianGetToken;
 import com.goodsogood.entity.ItemSales;
+import com.goodsogood.entity.ItemSalesTop;
+import com.goodsogood.entity.Items;
 import com.goodsogood.response.BaseResponse;
 import com.goodsogood.service.VdianService;
 import com.goodsogood.utils.VdianRestUtil;
@@ -31,7 +33,6 @@ public class VdianController {
 
     @CrossOrigin
     @ApiOperation(value = "刷新token", notes = "刷新token")
-    @ResponseBody
     @RequestMapping(value = "/refreshToken", method = RequestMethod.GET)
     public BaseResponse getToken() {
         try {
@@ -48,7 +49,6 @@ public class VdianController {
 
     @CrossOrigin
     @ApiOperation(value = "商品top", notes = "返回用户购买的排行榜，根据参数返回具体的top值。 排序方式：单个商品的购买总数降序")
-    @ResponseBody
     @RequestMapping(value = "/top", method = RequestMethod.GET)
     public BaseResponse getItemSalesTop(@RequestParam String page_no,@RequestParam String page_size) {
         try {
@@ -57,6 +57,33 @@ public class VdianController {
         } catch (Exception e) {
             e.printStackTrace();
             return BaseResponse.initErrorBaseResponse("获取数据异常："+e.getMessage());
+        }
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "商品详情", notes = "根据商品id查询商品详情")
+    @RequestMapping(value = "/commodity/detail", method = RequestMethod.GET)
+    public BaseResponse getItemDetail(@RequestParam String commodity_id) {
+        try {
+            ItemSalesTop itemDetail = vdianService.getItemDetail(commodity_id);
+            return BaseResponse.initSuccessBaseResponse(itemDetail);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BaseResponse.initErrorBaseResponse("获取数据异常："+e.getMessage());
+        }
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "商品详情", notes = "根据商品id查询商品详情")
+    @RequestMapping(value = "/push/receive",method = {RequestMethod.GET,RequestMethod.POST})
+    public String getVdianPush(@RequestParam String content) {
+        try {
+            System.out.println("接收push消息");
+            System.out.println("content:"+content);
+            return "{\"status\":\"success\"}";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{\"status\":\"false\"}";
         }
     }
 }

@@ -2,6 +2,8 @@ package com.goodsogood.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.goodsogood.entity.ItemSales;
+import com.goodsogood.entity.ItemSalesTop;
+import com.goodsogood.entity.Items;
 
 /**
  * 作者：chenhao
@@ -16,5 +18,7 @@ public interface VdianService {
      * @return
      */
     public ItemSales getItemSalesTop(String page_no, String page_size);
+
+    public ItemSalesTop getItemDetail(String commodity_id);
 
 }

@@ -16,7 +16,7 @@ public class VdianGetToken {
     @Autowired
     private VdianRestUtil vdianRestUtil;
 
-    public static String token = "b0e6e162529ea55e37fafbbc3524af5f0009219503";
+    public static String token = "4f58f73ff7d28455c18ea2bfc314afb800092202981";
 
 //    @PostConstruct
     public void init() {

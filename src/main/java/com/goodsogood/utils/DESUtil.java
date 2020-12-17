@@ -62,7 +62,7 @@ public class DESUtil {
             byte[] bytes = cipher.doFinal(data.getBytes(CHARSET));
  
             //JDK1.8及以上可直接使用Base64，JDK1.7及以下可以使用BASE64Encoder
-            //Android平台可以使用android.util.Base64
+            //Android平台可以使用android.util.Base64ToStringUtil
             return new String(Base64.getEncoder().encode(bytes));
  
         } catch (Exception e) {
