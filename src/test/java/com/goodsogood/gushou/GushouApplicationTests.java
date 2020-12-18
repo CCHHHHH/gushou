@@ -3,10 +3,11 @@ package com.goodsogood.gushou;
 import com.alibaba.fastjson.JSONObject;
 import com.goodsogood.GushouApplication;
 import com.goodsogood.config.VdianGetToken;
-import com.goodsogood.entity.ItemSales;
+import com.goodsogood.domain.User;
 import com.goodsogood.entity.ItemSalesTop;
-import com.goodsogood.entity.Items;
+import com.goodsogood.service.IUserService;
 import com.goodsogood.service.VdianService;
+import com.goodsogood.service.impl.UserServiceImpl;
 import com.goodsogood.utils.GushouRestUtil;
 import com.goodsogood.utils.VdianRestUtil;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes= GushouApplication.class)
@@ -29,6 +31,10 @@ class GushouApplicationTests {
 
     @Autowired
     private GushouRestUtil gushouRestUtil;
+
+    @Autowired
+    private IUserService userService;
+
 
     @Test
     void contextLoads() {
@@ -67,6 +73,14 @@ class GushouApplicationTests {
     public void getGushouToken(){
         String token = gushouRestUtil.getToken();
         System.out.println(token);
+    }
+
+    @Test
+    public void getUsers(){
+        List<User> users = userService.list();
+        for (User user : users) {
+            System.out.println(user);
+        }
     }
 
 }
