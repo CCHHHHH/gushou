@@ -22,4 +22,11 @@ public class EncodeTest {
         //c6b28ddee7069ba42eb998fc0abb05700009219503
 
     }
+
+    @Test
+    public void bytes(){
+        byte[] bytes = {(byte) 0x13,(byte) 0x01};
+        String s = new String(bytes);
+        System.out.println(s);
+    }
 }
