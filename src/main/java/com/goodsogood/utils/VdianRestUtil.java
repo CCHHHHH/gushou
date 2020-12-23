@@ -49,6 +49,19 @@ public class VdianRestUtil {
         String paramStr = JSONObject.toJSONString(param);
         String paramPublicStr = JSONObject.toJSONString(publicParam);
         String url = vdianApiUrl + "?param={paramStr}" + "&public={paramPublicStr}";
-        return restTemplate.getForObject(url, JSONObject.class, paramStr, paramPublicStr);
+        JSONObject results = restTemplate.getForObject(url, JSONObject.class, paramStr, paramPublicStr);
+
+        if (results==null){
+            throw new RuntimeException("调用微店接口失败！");
+        }
+
+        JSONObject status = results.getJSONObject("status");
+        //判断微店接口是否调用成功
+        Integer status_code = status.getInteger("status_code");
+        String status_reason = status.getString("status_reason");
+        if (status_code!=0){
+            throw new RuntimeException(status_reason);
+        }
+        return results;
     }
 }

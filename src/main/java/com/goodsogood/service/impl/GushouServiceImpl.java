@@ -1,6 +1,6 @@
 package com.goodsogood.service.impl;
 
-import com.goodsogood.service.GushouService;
+import com.goodsogood.service.IGushouService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
  * 日期：12/15/20 9:39 AM
  **/
 @Service
-public class GushouServiceImpl implements GushouService {
+public class GushouServiceImpl implements IGushouService {
 }

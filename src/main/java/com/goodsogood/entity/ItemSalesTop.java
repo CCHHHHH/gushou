@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 作者：chenhao
  * 日期：12/16/20 5:15 PM
- * top接口返回实体
+ * top接口返回实体,固守商品信息
  **/
 @Data
 public class ItemSalesTop {
@@ -16,8 +16,8 @@ public class ItemSalesTop {
     private String name; //商品名称
     private String url; //商品地址 ？
     private List<String> image_url; //显示使用的缩略图的地址
-    private String price; //商品价格
-    private String carriage; //运费
+    private Long price; //商品价格
+    private Long carriage; //运费
     private String classify; //分类
     private String sub_class; //子类
     private String description; //描述商品简介

@@ -1,6 +1,9 @@
 package com.goodsogood.domain;
 
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -24,6 +27,7 @@ public class Address implements Serializable {
     private static final long serialVersionUID=1L;
 
     @ApiModelProperty(value = "主键")
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     @ApiModelProperty(value = "收货人联系方式")
