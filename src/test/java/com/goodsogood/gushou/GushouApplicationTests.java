@@ -248,7 +248,7 @@ class GushouApplicationTests {
                 "\"access_key\": \"659202aded10458380b0a97a460c474e\"" +
                 "}";
         String info = "xxxxxxxxxxxxxxxxxxxxx";
-        boolean register = userService.register(content, info);
+        String register = userService.register(content, info);
         System.out.println(register);
     }
 

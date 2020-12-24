@@ -42,16 +42,12 @@ public class VdianController {
     public BaseResponse getToken(@RequestParam String query_param, @RequestParam String info) {
         try {
 
-            boolean flag = userService.register(query_param,info);
+            String flag = userService.register(query_param, info);
+            return BaseResponse.initSuccessBaseResponse(flag);
 
-            if (flag){
-                return BaseResponse.initSuccessBaseResponse(flag);
-            }else {
-                return BaseResponse.initErrorBaseResponse("绑定用户失败，请重试");
-            }
         } catch (Exception e) {
-            log.error("绑定用户失败",e);
-            return BaseResponse.initErrorBaseResponse("绑定用户失败："+e.getMessage());
+            log.error("绑定用户失败", e);
+            return BaseResponse.initErrorBaseResponse("绑定用户失败：" + e.getMessage());
         }
     }
 
@@ -62,26 +58,26 @@ public class VdianController {
         try {
             String token = vdianRestUtil.getToken();
             VdianGetToken.token = token;
-            if (StringUtils.isNotBlank(token)){
+            if (StringUtils.isNotBlank(token)) {
                 return BaseResponse.initSuccessBaseResponse("刷新Token成功");
             }
             return BaseResponse.initErrorBaseResponse("刷新Token失败");
         } catch (Exception e) {
-            log.error("获取Token异常",e);
-            return BaseResponse.initErrorBaseResponse("获取Token异常："+e.getMessage());
+            log.error("获取Token异常", e);
+            return BaseResponse.initErrorBaseResponse("获取Token异常：" + e.getMessage());
         }
     }
 
     @CrossOrigin
     @ApiOperation(value = "商品top", notes = "返回用户购买的排行榜，根据参数返回具体的top值。 排序方式：单个商品的购买总数降序")
     @RequestMapping(value = "/top", method = RequestMethod.GET)
-    public BaseResponse getItemSalesTop(@RequestParam String page_no,@RequestParam String page_size) {
+    public BaseResponse getItemSalesTop(@RequestParam String page_no, @RequestParam String page_size) {
         try {
             List<ItemSalesTop> itemSalesTop = IVdianService.getItemSalesTop(page_no, page_size);
             return BaseResponse.initSuccessBaseResponse(itemSalesTop);
         } catch (Exception e) {
-            log.error("获取数据异常",e);
-            return BaseResponse.initErrorBaseResponse("获取数据异常："+e.getMessage());
+            log.error("获取数据异常", e);
+            return BaseResponse.initErrorBaseResponse("获取数据异常：" + e.getMessage());
         }
     }
 
@@ -93,14 +89,14 @@ public class VdianController {
             ItemSalesTop itemDetail = IVdianService.getItemDetail(commodity_id);
             return BaseResponse.initSuccessBaseResponse(itemDetail);
         } catch (Exception e) {
-            log.error("获取数据异常",e);
-            return BaseResponse.initErrorBaseResponse("获取数据异常："+e.getMessage());
+            log.error("获取数据异常", e);
+            return BaseResponse.initErrorBaseResponse("获取数据异常：" + e.getMessage());
         }
     }
 
     @CrossOrigin
     @ApiOperation(value = "订阅微店消息", notes = "接收微店订单消息的推送")
-    @RequestMapping(value = "/push/receive",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/push/receive", method = {RequestMethod.GET, RequestMethod.POST})
     public String getVdianPush(@RequestParam String content) {
         try {
             log.info(content);
@@ -108,34 +104,34 @@ public class VdianController {
 
             return "{\"status\":\"success\"}";
         } catch (Exception e) {
-            log.error("接收推送消息异常",e);
+            log.error("接收推送消息异常", e);
             return "{\"status\":\"failed\"}";
         }
     }
 
     @CrossOrigin
     @ApiOperation(value = "订单推送回调接口", notes = "固守成功处理推送的消息后，调用改回调接口")
-    @RequestMapping(value = "/orderCallback",method = {RequestMethod.GET})
+    @RequestMapping(value = "/orderCallback", method = {RequestMethod.GET})
     public BaseResponse callback(@RequestParam String token) {
         try {
             boolean callback = IVdianService.callback(token);
             return BaseResponse.initSuccessBaseResponse("成功");
         } catch (Exception e) {
-            log.error("回调接口异常",e);
-            return BaseResponse.initErrorBaseResponse("失败"+e.getMessage());
+            log.error("回调接口异常", e);
+            return BaseResponse.initErrorBaseResponse("失败" + e.getMessage());
         }
     }
 
     @CrossOrigin
     @ApiOperation(value = "查询用户订单接口", notes = "根据条件返回订单")
-    @RequestMapping(value = "/userOrder",method = {RequestMethod.GET})
-    public BaseResponse userOrder(@RequestParam Integer type,@RequestParam Integer count) {
+    @RequestMapping(value = "/userOrder", method = {RequestMethod.GET})
+    public BaseResponse userOrder(@RequestParam Integer type, @RequestParam Integer count) {
         try {
-            List<OrderVo> orderVos = IVdianService.getUserOrder(type,count);
+            List<OrderVo> orderVos = IVdianService.getUserOrder(type, count);
             return BaseResponse.initSuccessBaseResponse(orderVos);
         } catch (Exception e) {
-            log.error("查询用户订单接口",e);
-            return BaseResponse.initErrorBaseResponse("失败"+e.getMessage());
+            log.error("查询用户订单接口", e);
+            return BaseResponse.initErrorBaseResponse("失败" + e.getMessage());
         }
     }
 }

@@ -28,7 +28,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private VdianRestUtil vdianRestUtil;
 
     @Override
-    public boolean register(String content, String info) {
+    public String register(String content, String info) {
         //TODO 对content进行解密
 
         JSONObject contentJson = JSONObject.parseObject(content);
@@ -40,8 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("openid", openid);
         if (this.count(userQueryWrapper) > 0) {
-            System.out.println("用户已绑定");
-            return true;
+            return "用户已绑定";
         }
 
 
@@ -73,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         int insert = this.baseMapper.insert(user);
 
 
-        return insert > 0;
+        return insert > 0 ? "用户绑定成功" : "用户绑定失败，请重试";
     }
 
     @Override

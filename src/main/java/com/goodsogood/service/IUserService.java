@@ -19,7 +19,7 @@ public interface IUserService extends IService<User> {
      * @param info
      * @return
      */
-    boolean register(String content, String info);
+    String register(String content, String info);
 
     /**
      * 更加微店用户id，获取固守用户
