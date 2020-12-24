@@ -16,6 +16,7 @@ import com.goodsogood.service.IVdianService;
 import com.goodsogood.utils.GushouRestUtil;
 import com.goodsogood.utils.VdianRestUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -212,27 +213,48 @@ public class VdianServiceImpl implements IVdianService {
     }
 
     @Override
-    public OrderVo getUserOrder(Integer type, Integer count) {
-        String conditions;
+    public List<OrderVo> getUserOrder(Integer type, Integer count) {
+        QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper<>();
         switch (type){
             case 1:
-                conditions = "push = 0 or push = 1";
+                orderInfoQueryWrapper.in("push",1,0);
                 break;
             case 2:
-                conditions = "push = 1";
+                orderInfoQueryWrapper.in("push",1);
                 break;
             case 3:
-                conditions = "push = 0";
+                orderInfoQueryWrapper.in("push",0);
                 break;
             default:
                 throw new RuntimeException("请输入正确的订单类型。");
         }
 
+        orderInfoQueryWrapper.orderByDesc("trading_time");
+        orderInfoQueryWrapper.last(" limit 0,"+count);
 
+        List<OrderInfo> orderInfos = orderService.list(orderInfoQueryWrapper);
 
+        List<OrderVo> orderVos = new ArrayList<>();
+        for (OrderInfo orderInfo : orderInfos) {
 
+            OrderVo orderVo = new OrderVo();
+            BeanUtils.copyProperties(orderInfo,orderVo);
 
+            QueryWrapper<Commodity> commodityQueryWrapper = new QueryWrapper<>();
+            commodityQueryWrapper.eq("order_id",orderInfo.getOrderId());
+            List<Commodity> commodities = commodityService.list(commodityQueryWrapper);
+            List<CommodityVo> commodityVos = new ArrayList<>();
+            for (Commodity commodity : commodities) {
+                CommodityVo commodityVo = new CommodityVo();
+                BeanUtils.copyProperties(commodity,commodityVo);
+                commodityVos.add(commodityVo);
+            }
+            orderVo.setOrder_commodity(commodityVos);
 
-        return null;
+            orderVos.add(orderVo);
+
+        }
+
+        return orderVos;
     }
 }

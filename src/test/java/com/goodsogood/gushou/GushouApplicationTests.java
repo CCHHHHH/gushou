@@ -2,6 +2,7 @@ package com.goodsogood.gushou;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.goodsogood.GushouApplication;
 import com.goodsogood.config.VdianGetToken;
 import com.goodsogood.domain.Commodity;
@@ -47,6 +48,9 @@ class GushouApplicationTests {
 
     @Autowired
     private IOrderInfoService orderService;
+
+    @Autowired
+    private OrderInfoMapper orderInfoMapper;
 
     @Autowired
     private ICommodityService commodityService;
@@ -270,6 +274,8 @@ class GushouApplicationTests {
             for (Commodity commodity : commodities) {
                 CommodityVo commodityVo = new CommodityVo();
                 BeanUtils.copyProperties(commodity,commodityVo);
+                System.out.println("source:"+commodity);
+                System.out.println("VO:"+commodityVo);
                 commodityVos.add(commodityVo);
             }
 
@@ -282,6 +288,7 @@ class GushouApplicationTests {
 
     @Test
     public void getOrderList11(){
-
+        List<OrderVo> userOrder = IVdianService.getUserOrder(1, 10);
+        System.out.println(userOrder);
     }
 }

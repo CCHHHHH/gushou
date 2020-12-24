@@ -43,5 +43,5 @@ public interface IVdianService {
      */
     boolean callback(String token);
 
-    OrderVo getUserOrder(Integer type, Integer count);
+    List<OrderVo> getUserOrder(Integer type, Integer count);
 }

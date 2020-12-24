@@ -131,10 +131,10 @@ public class VdianController {
     @RequestMapping(value = "/userOrder",method = {RequestMethod.GET})
     public BaseResponse userOrder(@RequestParam Integer type,@RequestParam Integer count) {
         try {
-            OrderVo orderVo = IVdianService.getUserOrder(type,count);
-            return BaseResponse.initSuccessBaseResponse(orderVo);
+            List<OrderVo> orderVos = IVdianService.getUserOrder(type,count);
+            return BaseResponse.initSuccessBaseResponse(orderVos);
         } catch (Exception e) {
-            log.error("回调接口异常",e);
+            log.error("查询用户订单接口",e);
             return BaseResponse.initErrorBaseResponse("失败"+e.getMessage());
         }
     }
