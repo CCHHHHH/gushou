@@ -10,6 +10,7 @@ import com.goodsogood.domain.User;
 import com.goodsogood.entity.CommodityVo;
 import com.goodsogood.entity.ItemSalesTop;
 import com.goodsogood.entity.OrderVo;
+import com.goodsogood.mapper.OrderInfoMapper;
 import com.goodsogood.push.PushMsgToGushou;
 import com.goodsogood.service.*;
 import com.goodsogood.utils.GushouRestUtil;
@@ -45,7 +46,7 @@ class GushouApplicationTests {
     private IUserService userService;
 
     @Autowired
-    private IOrderService orderService;
+    private IOrderInfoService orderService;
 
     @Autowired
     private ICommodityService commodityService;
@@ -110,8 +111,8 @@ class GushouApplicationTests {
         param.put("order_type","all");
         param.put("page_size","1");
 
-        JSONObject orderList = IVdianService.getOrderList(param);
-        System.out.println(orderList);
+//        JSONObject orderList = IVdianService.getOrderList(param);
+//        System.out.println(orderList);
     }
 
     @Test
@@ -275,9 +276,12 @@ class GushouApplicationTests {
             orderVo.setOrder_commodity(commodityVos);
             User buyer = userService.getBuyer(order.getOpenid());
 
-            pushMsgToGushou.alreadyPayment(orderVo,buyer.getInfo());
+            pushMsgToGushou.pushOrder(orderVo,buyer.getInfo());
         }
+    }
 
+    @Test
+    public void getOrderList11(){
 
     }
 }
