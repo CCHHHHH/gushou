@@ -16,13 +16,17 @@ public class OrderVo {
 
     private String openid;
 
-    private String orderId;
+    private String order_id;
+
+    private Long total_price;
+
+    private Long logistics;
 
     private Long donation;
 
-    private String tradingTime;
+    private String trading_time;
 
-    private String orderType;
+    private String order_type;
 
     private List<CommodityVo> order_commodity;
 }

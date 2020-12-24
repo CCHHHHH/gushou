@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -168,6 +169,8 @@ public class VdianServiceImpl implements IVdianService {
         order.setToken(token);
         order.setOrderId(receiveMessage.getOrder_id());
         order.setTradingTime(receiveMessage.getPay_time());
+        order.setTotalPrice((long)(Double.valueOf(receiveMessage.getPrice())*100));
+        order.setLogistics((long)(Double.valueOf(receiveMessage.getExpress_fee())*100));
         order.setOrderType(type);
         order.setPush(0);
         order.setDonation(0L);
@@ -236,9 +239,13 @@ public class VdianServiceImpl implements IVdianService {
 
         List<OrderVo> orderVos = new ArrayList<>();
         for (OrderInfo orderInfo : orderInfos) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
             OrderVo orderVo = new OrderVo();
             BeanUtils.copyProperties(orderInfo,orderVo);
+            orderVo.setOrder_type(orderInfo.getOrderType());
+            orderVo.setOrder_id(orderInfo.getOrderId());
+            orderVo.setTrading_time(simpleDateFormat.format(orderInfo.getTradingTime()));
 
             QueryWrapper<Commodity> commodityQueryWrapper = new QueryWrapper<>();
             commodityQueryWrapper.eq("order_id",orderInfo.getOrderId());
@@ -247,6 +254,11 @@ public class VdianServiceImpl implements IVdianService {
             for (Commodity commodity : commodities) {
                 CommodityVo commodityVo = new CommodityVo();
                 BeanUtils.copyProperties(commodity,commodityVo);
+                commodityVo.setActual_price(commodity.getActualPrice());
+                commodityVo.setCommodity_id(commodity.getCommodityId());
+                commodityVo.setOrder_id(commodity.getOrderId());
+                commodityVo.setRecommend_type(commodity.getRecommendType());
+                commodityVo.setSub_class(commodity.getSubClass());
                 commodityVos.add(commodityVo);
             }
             orderVo.setOrder_commodity(commodityVos);

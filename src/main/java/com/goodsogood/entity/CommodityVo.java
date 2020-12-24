@@ -9,17 +9,17 @@ import lombok.Data;
 @Data
 public class CommodityVo {
 
-    private String commodityId;
+    private String commodity_id;
 
     private String name;
 
     private String classify;
 
-    private String subClass;
+    private String sub_class;
 
     private Long price;
 
-    private Long actualPrice;
+    private Long actual_price;
 
     private Integer count;
 
@@ -33,7 +33,7 @@ public class CommodityVo {
 
     private Integer type;
 
-    private String orderId;
+    private String order_id;
 
-    private String recommendType;
+    private String recommend_type;
 }

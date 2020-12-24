@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -255,15 +256,21 @@ class GushouApplicationTests {
     @Test
     public void pushMsg(){
         List<OrderInfo> list = orderService.list();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
         for (OrderInfo order : list) {
             OrderVo orderVo = new OrderVo();
             String orderId = order.getOrderId();
             orderVo.setDonation(order.getDonation());
             orderVo.setOpenid(order.getOpenid());
-            orderVo.setOrderId(orderId);
+            orderVo.setOrder_id(orderId);
             orderVo.setToken(order.getToken());
-            orderVo.setTradingTime(order.getTradingTime());
+            orderVo.setOrder_type(order.getOrderType());
+            orderVo.setTrading_time(simpleDateFormat.format(order.getTradingTime()));
+            orderVo.setTotal_price(order.getTotalPrice());
+            orderVo.setLogistics(order.getLogistics());
+
+            System.out.println(orderVo);
 
 
             QueryWrapper<Commodity> commodityQueryWrapper = new QueryWrapper<>();
@@ -274,8 +281,11 @@ class GushouApplicationTests {
             for (Commodity commodity : commodities) {
                 CommodityVo commodityVo = new CommodityVo();
                 BeanUtils.copyProperties(commodity,commodityVo);
-                System.out.println("source:"+commodity);
-                System.out.println("VO:"+commodityVo);
+                commodityVo.setActual_price(commodity.getActualPrice());
+                commodityVo.setCommodity_id(commodity.getCommodityId());
+                commodityVo.setOrder_id(commodity.getOrderId());
+                commodityVo.setRecommend_type(commodity.getRecommendType());
+                commodityVo.setSub_class(commodity.getSubClass());
                 commodityVos.add(commodityVo);
             }
 

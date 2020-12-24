@@ -43,6 +43,12 @@ public class OrderInfo implements Serializable {
     @ApiModelProperty(value = "订单推送类型")
     private String orderType;
 
+    @ApiModelProperty(value = "订单总金额")
+    private Long totalPrice;
+
+    @ApiModelProperty(value = "订单邮费")
+    private Long logistics;
+
     @ApiModelProperty(value = "捐款金额")
     private Long donation;
 

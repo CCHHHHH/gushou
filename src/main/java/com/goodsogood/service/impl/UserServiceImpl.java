@@ -46,7 +46,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         //调用微店api，注册新用户
         HashMap<String, Object> param = new HashMap<>();
-        param.put("telephone", "13899999991");
+        param.put("telephone", "13899999992");
 //        param.put("noteName","");
 //        param.put("gender",1);
 //        param.put("birthday","");
