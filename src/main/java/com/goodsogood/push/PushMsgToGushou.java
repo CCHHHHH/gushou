@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,13 +118,16 @@ public class PushMsgToGushou {
 
     //重新将数据组装成固守所需要的数据
     public OrderVo assembly(OrderInfo order){
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+
         OrderVo orderVo = new OrderVo();
         String orderId = order.getOrderId();
         orderVo.setDonation(order.getDonation());
         orderVo.setOpenid(order.getOpenid());
         orderVo.setOrderId(orderId);
         orderVo.setToken(order.getToken());
-        orderVo.setTradingTime(order.getTradingTime());
+        orderVo.setTradingTime(simpleDateFormat.format(order.getTradingTime()));
         orderVo.setOrderType(order.getOrderType());
 
         QueryWrapper<Commodity> commodityQueryWrapper = new QueryWrapper<>();

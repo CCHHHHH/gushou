@@ -20,7 +20,7 @@ public class OrderVo {
 
     private Long donation;
 
-    private Date tradingTime;
+    private String tradingTime;
 
     private String orderType;
 

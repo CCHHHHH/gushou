@@ -75,7 +75,7 @@ public class VdianServiceImpl implements IVdianService {
             itemSalesTop.setUrl("");
             itemSalesTop.setImage_url(item.getThumb_imgs());
             itemSalesTop.setPrice((long)(Double.valueOf(item.getPrice())*100));
-            itemSalesTop.setCarriage(-1L);
+            itemSalesTop.setCarriage(0L);
             List<Cates> cates = item.getCates();
             String cateNames = "";
             for (Cates cate : cates) {
@@ -124,7 +124,7 @@ public class VdianServiceImpl implements IVdianService {
         }
         itemSalesTop.setImage_url(images);
         itemSalesTop.setPrice((long)(Double.valueOf(result.getString("price"))*100));
-        itemSalesTop.setCarriage(-1L);
+        itemSalesTop.setCarriage(0L);
 
         JSONArray cates = result.getJSONArray("cates");
         String cateNames = "";
@@ -170,7 +170,7 @@ public class VdianServiceImpl implements IVdianService {
         order.setTradingTime(receiveMessage.getPay_time());
         order.setOrderType(type);
         order.setPush(0);
-        order.setDonation(-1L);
+        order.setDonation(0L);
 
         List<ReceiveOrderItems> items = receiveMessage.getItems();
         for (ReceiveOrderItems item : items) {
