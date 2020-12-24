@@ -30,7 +30,7 @@ public class DataEncryption {
         String re = URLEncoder.encode(Base64.getEncoder().encodeToString(obj.getBytes("utf-8")), "utf-8");
         System.out.println("加密后的_h参数：" + re);
 
-        String text = indexAndDetail1(re);
+        String text = indexAndDetail1("eyJhY2Nlc3Nfa2V5IjoiNjU5MjAyYWRlZDEwNDU4MzgwYjBhOTdhNDYwYzQ3NGUiLCJfaHMiOiIxNTMwMTYxNjczIn0%3D");
     }
 
     /**
@@ -70,7 +70,7 @@ public class DataEncryption {
 //          System.out.println("hash密文："+encryptHash);
         //传递key为加密后报文
         Integer r = randomHash - encryptHash;
-        System.out.println("传递key：" + r);
+//        System.out.println("传递key：" + r);
         return r.toString();
     }
 
@@ -83,7 +83,7 @@ public class DataEncryption {
         String key = map.get("_hs");
 
         System.out.println(key);
-        String body = s;
+        String body = re;
         body = URLDecoder.decode(body, "UTF-8");
         //hash密文
         Integer encryptHash = Math.abs(DataEncryption.SDBMHash(body));

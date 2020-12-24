@@ -1,8 +1,8 @@
 package com.goodsogood.service.impl;
 
 import com.goodsogood.domain.OrderInfo;
-import com.goodsogood.mapper.OrderMapper;
-import com.goodsogood.service.IOrderService;
+import com.goodsogood.mapper.OrderInfoMapper;
+import com.goodsogood.service.IOrderInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2020-12-21
  */
 @Service
-public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderInfo> implements IOrderService {
+public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo> implements IOrderInfoService {
 
 }

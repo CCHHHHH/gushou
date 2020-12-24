@@ -8,13 +8,14 @@ import com.goodsogood.domain.Commodity;
 import com.goodsogood.domain.OrderInfo;
 import com.goodsogood.domain.User;
 import com.goodsogood.entity.*;
+import com.goodsogood.push.PushMsgToGushou;
 import com.goodsogood.service.ICommodityService;
-import com.goodsogood.service.IOrderService;
+import com.goodsogood.service.IOrderInfoService;
 import com.goodsogood.service.IUserService;
 import com.goodsogood.service.IVdianService;
 import com.goodsogood.utils.GushouRestUtil;
-import com.goodsogood.utils.OrderPushType;
 import com.goodsogood.utils.VdianRestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.*;
  * 日期：12/15/20 9:52 AM
  **/
 @Service
+@Slf4j
 public class VdianServiceImpl implements IVdianService {
 
     @Autowired
@@ -38,10 +40,13 @@ public class VdianServiceImpl implements IVdianService {
     private IUserService userService;
 
     @Autowired
-    private IOrderService orderService;
+    private IOrderInfoService orderService;
 
     @Autowired
     private ICommodityService commodityService;
+
+    @Autowired
+    private PushMsgToGushou pushMsgToGushou;
 
     @Override
     public List<ItemSalesTop> getItemSalesTop(String page_no, String page_size) {
@@ -141,29 +146,22 @@ public class VdianServiceImpl implements IVdianService {
         return itemSalesTop;
     }
 
-    @Override
-    public JSONObject getOrderList(Map<String, Object> param) {
-        HashMap<String, Object> paramPublic = new HashMap<>();
-        paramPublic.put("method","vdian.order.list.get");
-        paramPublic.put("format","json");
-        paramPublic.put("access_token", VdianGetToken.token);
-        paramPublic.put("version","1.2");
-
-        JSONObject results = vdianRestUtil.getRestApi(param, paramPublic);
-
-        return results;
-    }
-
     @Transactional
     @Override
     public void paresReceiveMsg(String content) {
         JSONObject contentJson = JSONObject.parseObject(content);
         String type = contentJson.getString("type");
-        ReceiveMessage receiveMessage = parsePushJson(contentJson);
+        ReceiveMessage receiveMessage = JSONObject.toJavaObject(contentJson.getJSONObject("message"), ReceiveMessage.class);
         OrderInfo order = new OrderInfo();
         List<Commodity> commodities = new ArrayList<>();
 
         User user = userService.getUser(receiveMessage.getBuyer_info().getBuyer_id());
+
+        if (user == null){
+            log.error("推送的订单所属用户未绑定。微店用户id："+receiveMessage.getBuyer_info().getBuyer_id());
+            throw new RuntimeException("推送的订单所属用户未绑定。");
+        }
+
         order.setOpenid(user.getOpenid());
         String token = UUID.randomUUID().toString().replaceAll("-", "");
         order.setToken(token);
@@ -194,21 +192,12 @@ public class VdianServiceImpl implements IVdianService {
             commodities.add(commodity);
         }
 
-        switch (type){
-            case OrderPushType.WEIDIAN_ORDER_NON_PAYMENT:
-                //待付款（直接到账+担保交易）
-
-                break;
-            case OrderPushType.WEIDIAN_ORDER_ALREADY_PAYMENT:
-                //已付款（直接到账）/已付款待发货（担保交易）
-
-                break;
-            default:
-        }
-
         //写入到数据库
         orderService.getBaseMapper().insert(order);
         commodityService.saveBatch(commodities);
+
+        //组装数据，推送到固守
+        pushMsgToGushou.pushOrder(pushMsgToGushou.assembly(order), user.getInfo());
 
     }
 
@@ -219,11 +208,31 @@ public class VdianServiceImpl implements IVdianService {
         OrderInfo orderInfo = orderService.getOne(orderInfoQueryWrapper);
         orderInfo.setPush(1);
 
-        return orderService.save(orderInfo);
-
+        return orderService.updateById(orderInfo);
     }
 
-    private ReceiveMessage parsePushJson(JSONObject content){
-        return JSONObject.toJavaObject(content.getJSONObject("message"), ReceiveMessage.class);
+    @Override
+    public OrderVo getUserOrder(Integer type, Integer count) {
+        String conditions;
+        switch (type){
+            case 1:
+                conditions = "push = 0 or push = 1";
+                break;
+            case 2:
+                conditions = "push = 1";
+                break;
+            case 3:
+                conditions = "push = 0";
+                break;
+            default:
+                throw new RuntimeException("请输入正确的订单类型。");
+        }
+
+
+
+
+
+
+        return null;
     }
 }

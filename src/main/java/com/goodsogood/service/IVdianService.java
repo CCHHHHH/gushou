@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.goodsogood.entity.ItemSales;
 import com.goodsogood.entity.ItemSalesTop;
 import com.goodsogood.entity.Items;
+import com.goodsogood.entity.OrderVo;
 
 import java.util.List;
 import java.util.Map;
@@ -30,18 +31,17 @@ public interface IVdianService {
     public ItemSalesTop getItemDetail(String commodity_id);
 
     /**
-     * 获取订单列表  暂不实现
-     * @param param
-     * @return
-     */
-    public JSONObject getOrderList(Map<String,Object> param);
-
-    /**
      * 接收微店推送数据
      * @param content
      */
     void paresReceiveMsg(String content);
 
+    /**
+     * 推送数据回调接口，根据传递的token值，查询订单，改变推送状态
+     * @param token
+     * @return
+     */
     boolean callback(String token);
 
+    OrderVo getUserOrder(Integer type, Integer count);
 }

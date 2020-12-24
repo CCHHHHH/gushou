@@ -22,5 +22,7 @@ public class OrderVo {
 
     private Date tradingTime;
 
+    private String orderType;
+
     private List<CommodityVo> order_commodity;
 }

@@ -11,6 +11,6 @@ import com.goodsogood.domain.OrderInfo;
  * @author chenhao
  * @since 2020-12-21
  */
-public interface IOrderService extends IService<OrderInfo> {
+public interface IOrderInfoService extends IService<OrderInfo> {
 
 }

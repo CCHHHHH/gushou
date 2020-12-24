@@ -1,6 +1,7 @@
 package com.goodsogood.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.methods.HttpHead;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,7 @@ import java.util.Map;
  * 日期：12/17/20 4:24 PM
  **/
 @Component
+@Slf4j
 public class GushouRestUtil {
 
     @Value("${gushou.access_key}")
@@ -47,18 +49,20 @@ public class GushouRestUtil {
             String obj = JSONObject.toJSONString(map);
             re = URLEncoder.encode(Base64.getEncoder().encodeToString(obj.getBytes("utf-8")), "utf-8");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("数据加密错误",e);
             throw new RuntimeException("数据加密错误");
         }
 
         MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<String, Object>();
-        paramMap.add("data", re);
-        paramMap.add("info", info);
+//        paramMap.add("data", re);
+//        paramMap.add("info", info);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("access_key", access_key);
+//        headers.add("access_key", access_key);
 
         String url1 = gushouApiUrl + url + "?_h="+re;
+        System.out.println(re);
+        System.out.println(url1);
 //        String url1 = gushouApiUrl + url;
 
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(paramMap,headers);
