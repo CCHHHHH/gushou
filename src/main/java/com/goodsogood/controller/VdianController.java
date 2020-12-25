@@ -1,11 +1,13 @@
 package com.goodsogood.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.goodsogood.config.VdianGetToken;
 import com.goodsogood.entity.ItemSalesTop;
 import com.goodsogood.entity.OrderVo;
 import com.goodsogood.response.BaseResponse;
 import com.goodsogood.service.IUserService;
 import com.goodsogood.service.IVdianService;
+import com.goodsogood.utils.DataEncryption;
 import com.goodsogood.utils.VdianRestUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,7 +26,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @Slf4j
-@RequestMapping("/rest/vdian")
+//@RequestMapping("/rest/vdian")
 public class VdianController {
 
     @Autowired
@@ -39,10 +41,12 @@ public class VdianController {
     @CrossOrigin
     @ApiOperation(value = "绑定用户", notes = "绑定用户")
     @RequestMapping(value = "/registerUser", method = RequestMethod.GET)
-    public BaseResponse getToken(@RequestParam String query_param, @RequestParam String info) {
+    public BaseResponse getToken(@RequestParam String query_param, @RequestParam String info, @RequestParam String _h) {
         try {
 
-            String flag = userService.register(query_param, info);
+            String body = DataEncryption.decryption(_h, query_param);
+
+            String flag = userService.register(body, info);
             return BaseResponse.initSuccessBaseResponse(flag);
 
         } catch (Exception e) {
@@ -71,9 +75,13 @@ public class VdianController {
     @CrossOrigin
     @ApiOperation(value = "商品top", notes = "返回用户购买的排行榜，根据参数返回具体的top值。 排序方式：单个商品的购买总数降序")
     @RequestMapping(value = "/top", method = RequestMethod.GET)
-    public BaseResponse getItemSalesTop(@RequestParam String page_no, @RequestParam String page_size) {
+    public BaseResponse getItemSalesTop(@RequestParam String query_param,@RequestParam String _h) {
         try {
-            List<ItemSalesTop> itemSalesTop = IVdianService.getItemSalesTop(page_no, page_size);
+
+            String body = DataEncryption.decryption(_h, query_param);
+            JSONObject jsonObject = JSONObject.parseObject(body);
+
+            List<ItemSalesTop> itemSalesTop = IVdianService.getItemSalesTop(jsonObject.getInteger("page_no"), jsonObject.getInteger("page_size"));
             return BaseResponse.initSuccessBaseResponse(itemSalesTop);
         } catch (Exception e) {
             log.error("获取数据异常", e);
@@ -83,10 +91,14 @@ public class VdianController {
 
     @CrossOrigin
     @ApiOperation(value = "商品详情", notes = "根据商品id查询商品详情")
-    @RequestMapping(value = "/commodityDetail", method = RequestMethod.GET)
-    public BaseResponse getItemDetail(@RequestParam String commodity_id) {
+    @RequestMapping(value = "/commodity/detail", method = RequestMethod.GET)
+    public BaseResponse getItemDetail(@RequestParam String query_param,@RequestParam String _h) {
         try {
-            ItemSalesTop itemDetail = IVdianService.getItemDetail(commodity_id);
+
+            String body = DataEncryption.decryption(_h, query_param);
+            JSONObject jsonObject = JSONObject.parseObject(body);
+
+            ItemSalesTop itemDetail = IVdianService.getItemDetail(jsonObject.getString("commodity_id"));
             return BaseResponse.initSuccessBaseResponse(itemDetail);
         } catch (Exception e) {
             log.error("获取数据异常", e);
@@ -112,9 +124,12 @@ public class VdianController {
     @CrossOrigin
     @ApiOperation(value = "订单推送回调接口", notes = "固守成功处理推送的消息后，调用改回调接口")
     @RequestMapping(value = "/orderCallback", method = {RequestMethod.GET})
-    public BaseResponse callback(@RequestParam String token) {
+    public BaseResponse callback(@RequestParam String query_param,@RequestParam String _h) {
         try {
-            boolean callback = IVdianService.callback(token);
+            String body = DataEncryption.decryption(_h, query_param);
+            JSONObject jsonObject = JSONObject.parseObject(body);
+
+            boolean callback = IVdianService.callback(jsonObject.getString("token"));
             return BaseResponse.initSuccessBaseResponse("成功");
         } catch (Exception e) {
             log.error("回调接口异常", e);
@@ -123,11 +138,15 @@ public class VdianController {
     }
 
     @CrossOrigin
-    @ApiOperation(value = "查询用户订单接口", notes = "根据条件返回订单")
-    @RequestMapping(value = "/userOrder", method = {RequestMethod.GET})
-    public BaseResponse userOrder(@RequestParam Integer type, @RequestParam Integer count) {
+    @ApiOperation(value = "拉取用户下单数据", notes = "根据条件返回订单")
+    @RequestMapping(value = "/pull/user/order", method = {RequestMethod.GET})
+    public BaseResponse userOrder(@RequestParam String query_param,@RequestParam String _h) {
         try {
-            List<OrderVo> orderVos = IVdianService.getUserOrder(type, count);
+
+            String body = DataEncryption.decryption(_h, query_param);
+            JSONObject jsonObject = JSONObject.parseObject(body);
+
+            List<OrderVo> orderVos = IVdianService.getUserOrder(jsonObject.getInteger("type"), jsonObject.getInteger("count"));
             return BaseResponse.initSuccessBaseResponse(orderVos);
         } catch (Exception e) {
             log.error("查询用户订单接口", e);

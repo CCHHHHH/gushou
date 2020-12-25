@@ -29,7 +29,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public String register(String content, String info) {
-        //TODO 对content进行解密
 
         JSONObject contentJson = JSONObject.parseObject(content);
         String nick_name = contentJson.getString("nick_name");

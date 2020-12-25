@@ -21,7 +21,7 @@ public interface IVdianService {
      * @param page_size
      * @return
      */
-    public List<ItemSalesTop> getItemSalesTop(String page_no, String page_size);
+    public List<ItemSalesTop> getItemSalesTop(Integer page_no, Integer page_size);
 
     /**
      * 获取商品详情

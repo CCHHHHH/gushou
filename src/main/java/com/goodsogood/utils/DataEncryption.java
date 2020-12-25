@@ -10,20 +10,24 @@ public class DataEncryption {
 
     public static void main(String[] args) throws Exception {
 
-        String content = "{\"donation\":0,\"openid\":\"o3wYk1bTQajjG3cFTi_1qb6Y6UGg\",\"orderId\":\"1111130292248\",\"order_commodity\":[{\"actualPrice\":4000,\"area\":\"\",\"carriage\":1,\"classify\":\"\",\"commodityId\":\"4038199354\",\"company\":\"1111旗舰店\",\"count\":1,\"name\":\"限时预售 Vogue Film（2020\",\"orderId\":\"1111130292248\",\"price\":4000,\"recommendType\":\"\",\"standard\":\"\",\"subClass\":\"\",\"type\":1}],\"token\":\"346e3f0375da42b69fe8e0c3b70139b1\",\"tradingTime\":\"2020-12-22 12:12:12\"}";
+//        String content = "{\"page_no\":1,\"page_size\":20}";
+//        String content = "{\"nick_name\":\"安安\",\"openid\":\"o3wYk1bTQajjG3cFTi_1qb6Y6UGg\",\"access_key\":\"659202aded10458380b0a97a460c474e\"}";
+//        String content = "{\"commodity_id\":\"3454229114\"}";
+//        String content = "{\"token\":\"d2019178afeb4fb8aaccfa21fa389a6e\"}";
+        String content = "{\"type\":1,\"count\":10}";
 
         //加密KEY
-//        List<String> jiami = indexAndDetail(content);
+        List<String> jiami = indexAndDetail(content);
 //        //加密头消息
-//        Map<String, Object> map = new HashMap<>();
-//        System.out.println("key:" + jiami.get(0));
-//        map.put("_hs", jiami.get(0));
-//        map.put("access_key", "659202aded10458380b0a97a460c474e");
-//        String obj = JSONObject.toJSONString(map);
-//        String re = URLEncoder.encode(Base64.getEncoder().encodeToString(obj.getBytes("utf-8")), "utf-8");
-//        System.out.println("加密后的_h参数：" + re);
+        Map<String, Object> map = new HashMap<>();
+        System.out.println("key:" + jiami.get(0));
+        map.put("_hs", jiami.get(0));
+        map.put("access_key", "659202aded10458380b0a97a460c474e");
+        String obj = JSONObject.toJSONString(map);
+        String re = URLEncoder.encode(Base64.getEncoder().encodeToString(obj.getBytes("utf-8")), "utf-8");
+        System.out.println("加密后的_h参数：" + re);
 
-        jiemi("eyJhY2Nlc3Nfa2V5IjoiNjU5MjAyYWRlZDEwNDU4MzgwYjBhOTdhNDYwYzQ3NGUiLCJfaHMiOiIxMDc4MzkzMzUxIn0%3D","ZHfeWH6xONshKM6ochKbwplogiwol5lBZLS%2BZOxNKB7TGDnE4uaKZpOMwYX0VLy%2BwX%2Fhc0RsOIuw7BatDsQnljDgcy7y8EvHZ4HbOEvXrEEJfIE5Leo%2BB5lEXzVRFOJ7R13w%2Fxvv1E%2By2WCzn%2BSd3C%2F1JKDXL5HHx4Dce5bT2XcX4FkXsV4MTDqomQqyaVne%2Bx%2Bbs1fmHwNQmMS9OjaOmbft08iCNnYqODtnnfbyYYNoNqk%2BWt6F0CjebpEggs61zDoqsDmMjER37pFGW0CHeYZfGhU%2FDECiaiwZCOOg4rYvaK9twey1yTg1jwgSeMczhVUOzyrbqtjd6NsedpuvAhuweQavul8B%2FxRtIuFiaV0TnnMSlkwh5AghMex92kykahyjmw5ZnADt4xdeyfOGs2X0iHNcE8DZqTRhtkfu6vgXCvq6J1Nc9Ci3HxVo02wPUFFemCrW7YYF9nU4gR169UW0nn944%2BS%2B75zcr73L%2B%2Bo9lTMFwICGEyt2VTqI%2FopAqvnXv6dprIaaWRDw6Da6%2ByfxAGTYHxubXRsqzbLQ3kAgZRyzAOnTtuDO%2FhnQsL%2FcdrN%2BaZsKWeGy44d6FWLHUzhrS5tguzHgzQDforaaf%2FMrOzhI42pVPCJNMu2QQ%2FLOusDI7FtTozmmPB3Flv8KaZk3fLa9DAmf");
+//        decryption("eyJhY2Nlc3Nfa2V5IjoiNjU5MjAyYWRlZDEwNDU4MzgwYjBhOTdhNDYwYzQ3NGUiLCJfaHMiOiIxMDc4MzkzMzUxIn0%3D","ZHfeWH6xONshKM6ochKbwplogiwol5lBZLS%2BZOxNKB7TGDnE4uaKZpOMwYX0VLy%2BwX%2Fhc0RsOIuw7BatDsQnljDgcy7y8EvHZ4HbOEvXrEEJfIE5Leo%2BB5lEXzVRFOJ7R13w%2Fxvv1E%2By2WCzn%2BSd3C%2F1JKDXL5HHx4Dce5bT2XcX4FkXsV4MTDqomQqyaVne%2Bx%2Bbs1fmHwNQmMS9OjaOmbft08iCNnYqODtnnfbyYYNoNqk%2BWt6F0CjebpEggs61zDoqsDmMjER37pFGW0CHeYZfGhU%2FDECiaiwZCOOg4rYvaK9twey1yTg1jwgSeMczhVUOzyrbqtjd6NsedpuvAhuweQavul8B%2FxRtIuFiaV0TnnMSlkwh5AghMex92kykahyjmw5ZnADt4xdeyfOGs2X0iHNcE8DZqTRhtkfu6vgXCvq6J1Nc9Ci3HxVo02wPUFFemCrW7YYF9nU4gR169UW0nn944%2BS%2B75zcr73L%2B%2Bo9lTMFwICGEyt2VTqI%2FopAqvnXv6dprIaaWRDw6Da6%2ByfxAGTYHxubXRsqzbLQ3kAgZRyzAOnTtuDO%2FhnQsL%2FcdrN%2BaZsKWeGy44d6FWLHUzhrS5tguzHgzQDforaaf%2FMrOzhI42pVPCJNMu2QQ%2FLOusDI7FtTozmmPB3Flv8KaZk3fLa9DAmf");
 
     }
 
@@ -78,7 +82,7 @@ public class DataEncryption {
     }
 
     //解密
-    public static String jiemi(String re,String body) throws Exception {
+    public static String decryption(String re,String body) throws Exception {
 
         String header = Base64ToStringUtil.baseConvertStr(URLDecoder.decode(re, "UTF-8"));
         Map<String, String> map = JSONObject.parseObject(header, Map.class);
@@ -100,7 +104,7 @@ public class DataEncryption {
         body = DESUtils.decryption(body, key);
         System.out.println(body);
 
-        return "";
+        return body;
     }
 
 

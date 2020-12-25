@@ -51,7 +51,7 @@ public class VdianServiceImpl implements IVdianService {
     private PushMsgToGushou pushMsgToGushou;
 
     @Override
-    public List<ItemSalesTop> getItemSalesTop(String page_no, String page_size) {
+    public List<ItemSalesTop> getItemSalesTop(Integer page_no, Integer page_size) {
         HashMap<String, Object> param = new HashMap<>();
         param.put("page_size",page_size);
         param.put("status","1");
@@ -70,10 +70,14 @@ public class VdianServiceImpl implements IVdianService {
         List<ItemSalesTop> itemSalesTops = new ArrayList<>();
 
         for (Items item : items) {
+
+            JSONObject oneItemDetail = getOneItemDetail(item.getItemid());
+            JSONObject result1 = oneItemDetail.getJSONObject("result");
+
             ItemSalesTop itemSalesTop = new ItemSalesTop();
             itemSalesTop.setCommodity_id(item.getItemid());
             itemSalesTop.setName(item.getItem_name());
-            itemSalesTop.setUrl("");
+            itemSalesTop.setUrl(result1.getString("faceurl"));
             itemSalesTop.setImage_url(item.getThumb_imgs());
             itemSalesTop.setPrice((long)(Double.valueOf(item.getPrice())*100));
             itemSalesTop.setCarriage(0L);
@@ -90,7 +94,7 @@ public class VdianServiceImpl implements IVdianService {
             itemSalesTop.setCompany_logo("");
             itemSalesTop.setStandard("");
             itemSalesTop.setMemo("");
-            itemSalesTop.setDetail("");
+            itemSalesTop.setDetail(result1.getString("text"));
             itemSalesTop.setPublish(item.getStatus()==2?0:item.getStatus()==1?1:3);
             itemSalesTops.add(itemSalesTop);
         }
@@ -134,6 +138,9 @@ public class VdianServiceImpl implements IVdianService {
             cateNames += jsonObject.getString("cate_name") + ",";
         }
 
+        JSONObject oneItemDetail = getOneItemDetail(itemSalesTop.getCommodity_id());
+        JSONObject result1 = oneItemDetail.getJSONObject("result");
+
         itemSalesTop.setClassify(cateNames.substring(0,cateNames.length()-1));
         itemSalesTop.setSub_class("");
         itemSalesTop.setDescription("");
@@ -142,7 +149,7 @@ public class VdianServiceImpl implements IVdianService {
         itemSalesTop.setCompany_logo("");
         itemSalesTop.setStandard("");
         itemSalesTop.setMemo("");
-        itemSalesTop.setDetail("");
+        itemSalesTop.setDetail(result1.getString("text"));
         itemSalesTop.setPublish(result.getString("status").equals("instock")?0:result.getString("status").equals("onsale")?1:3);
 
         return itemSalesTop;
@@ -179,10 +186,12 @@ public class VdianServiceImpl implements IVdianService {
         for (ReceiveOrderItems item : items) {
             Commodity commodity = new Commodity();
 
+            ItemSalesTop itemDetail = getItemDetail(item.getItem_id());
+
             commodity.setOrderId(receiveMessage.getOrder_id());
             commodity.setCommodityId(item.getItem_id());
             commodity.setName(item.getItem_name());
-            commodity.setClassify("");
+            commodity.setClassify(itemDetail.getClassify());
             commodity.setSubClass("");
             commodity.setPrice((long)(Double.valueOf(item.getPrice())*100));
             commodity.setActualPrice((long)(Double.valueOf(item.getTotal_price())*100));
@@ -191,7 +200,7 @@ public class VdianServiceImpl implements IVdianService {
             commodity.setCarriage(Long.valueOf(item.getQuantity()));
             commodity.setArea("");
             commodity.setCompany(receiveMessage.getSeller_name());
-            commodity.setType(-1);
+            commodity.setType(1);
             commodity.setRecommendType("");
             commodities.add(commodity);
         }
@@ -268,5 +277,17 @@ public class VdianServiceImpl implements IVdianService {
         }
 
         return orderVos;
+    }
+
+    private JSONObject getOneItemDetail(String itemId){
+        HashMap<String, Object> param = new HashMap<>();
+        param.put("item_id",itemId);
+
+        HashMap<String, Object> paramPublic = new HashMap<>();
+        paramPublic.put("method","vdian.item.getItemDetail");
+        paramPublic.put("format","json");
+        paramPublic.put("access_token", VdianGetToken.token);
+        paramPublic.put("version","1.0");
+        return vdianRestUtil.getRestApi(param, paramPublic);
     }
 }
