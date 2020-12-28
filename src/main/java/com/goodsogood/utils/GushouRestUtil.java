@@ -58,6 +58,7 @@ public class GushouRestUtil {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("data",ser.get(1));
+        System.out.println("加密的消息体body:"+ser.get(1));
 
         String url1 = gushouApiUrl + url + "?_h=" + re + "&info=" + info;
         System.out.println(re);

@@ -14,6 +14,7 @@ import com.goodsogood.service.IOrderInfoService;
 import com.goodsogood.service.IUserService;
 import com.goodsogood.service.IVdianService;
 import com.goodsogood.utils.GushouRestUtil;
+import com.goodsogood.utils.OrderPushType;
 import com.goodsogood.utils.VdianRestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -142,12 +143,12 @@ public class VdianServiceImpl implements IVdianService {
         JSONObject result1 = oneItemDetail.getJSONObject("result");
 
         itemSalesTop.setClassify(cateNames.substring(0,cateNames.length()-1));
-        itemSalesTop.setSub_class("");
+        itemSalesTop.setSub_class(cateNames.substring(0,cateNames.length()-1));
         itemSalesTop.setDescription("");
-        itemSalesTop.setArea("");
+        itemSalesTop.setArea("重庆");
         itemSalesTop.setCompany("");
         itemSalesTop.setCompany_logo("");
-        itemSalesTop.setStandard("");
+        itemSalesTop.setStandard("无");
         itemSalesTop.setMemo("");
         itemSalesTop.setDetail(result1.getString("text"));
         itemSalesTop.setPublish(result.getString("status").equals("instock")?0:result.getString("status").equals("onsale")?1:3);
@@ -163,6 +164,11 @@ public class VdianServiceImpl implements IVdianService {
         ReceiveMessage receiveMessage = JSONObject.toJavaObject(contentJson.getJSONObject("message"), ReceiveMessage.class);
         OrderInfo order = new OrderInfo();
         List<Commodity> commodities = new ArrayList<>();
+
+        //只接收 已付款（直接到账）/已付款待发货（担保交易）订单
+        if (!type.equals(OrderPushType.WEIDIAN_ORDER_ALREADY_PAYMENT)){
+            return;
+        }
 
         User user = userService.getUser(receiveMessage.getBuyer_info().getBuyer_id());
 
@@ -192,13 +198,13 @@ public class VdianServiceImpl implements IVdianService {
             commodity.setCommodityId(item.getItem_id());
             commodity.setName(item.getItem_name());
             commodity.setClassify(itemDetail.getClassify());
-            commodity.setSubClass("");
+            commodity.setSubClass(itemDetail.getClassify());
             commodity.setPrice((long)(Double.valueOf(item.getPrice())*100));
             commodity.setActualPrice((long)(Double.valueOf(item.getTotal_price())*100));
             commodity.setCount(Integer.valueOf(item.getQuantity()));
-            commodity.setStandard("");
+            commodity.setStandard("无");
             commodity.setCarriage(Long.valueOf(item.getQuantity()));
-            commodity.setArea("");
+            commodity.setArea("重庆");
             commodity.setCompany(receiveMessage.getSeller_name());
             commodity.setType(1);
             commodity.setRecommendType("");

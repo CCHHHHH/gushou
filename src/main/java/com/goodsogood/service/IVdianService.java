@@ -43,5 +43,11 @@ public interface IVdianService {
      */
     boolean callback(String token);
 
+    /**
+     * 拉取用户订单数据
+     * @param type
+     * @param count
+     * @return
+     */
     List<OrderVo> getUserOrder(Integer type, Integer count);
 }
