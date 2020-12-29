@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,8 @@ import java.util.List;
  * 日期：12/16/20 3:28 PM
  **/
 @Api(tags = {"微店接口"})
-@RestController
+//@RestController
+@Controller
 @CrossOrigin
 @Slf4j
 //@RequestMapping("/rest/vdian")
@@ -38,8 +40,23 @@ public class VdianController {
     @Autowired
     private IUserService userService;
 
+
+    @CrossOrigin
+    @ApiOperation(value = "重定向到静态页面", notes = "绑定用户")
+    @RequestMapping(value = "/redirect", method = RequestMethod.GET)
+    public String redirect(@RequestParam String query_param) {
+        try {
+
+            return "redirect:index.html?query_param="+query_param;
+
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     @CrossOrigin
     @ApiOperation(value = "绑定用户", notes = "绑定用户")
+    @ResponseBody
     @RequestMapping(value = "/registerUser", method = RequestMethod.GET)
     public BaseResponse getToken(@RequestParam String query_param, @RequestParam String info, @RequestParam String _h) {
         try {
@@ -57,6 +74,7 @@ public class VdianController {
 
     @CrossOrigin
     @ApiOperation(value = "刷新token", notes = "刷新token")
+    @ResponseBody
     @RequestMapping(value = "/refreshToken", method = RequestMethod.GET)
     public BaseResponse getToken() {
         try {
@@ -74,6 +92,7 @@ public class VdianController {
 
     @CrossOrigin
     @ApiOperation(value = "商品top", notes = "返回用户购买的排行榜，根据参数返回具体的top值。 排序方式：单个商品的购买总数降序")
+    @ResponseBody
     @RequestMapping(value = "/top", method = RequestMethod.GET)
     public BaseResponse getItemSalesTop(@RequestParam String query_param,@RequestParam String _h) {
         try {
@@ -91,6 +110,7 @@ public class VdianController {
 
     @CrossOrigin
     @ApiOperation(value = "商品详情", notes = "根据商品id查询商品详情")
+    @ResponseBody
     @RequestMapping(value = "/commodity/detail", method = RequestMethod.GET)
     public BaseResponse getItemDetail(@RequestParam String query_param,@RequestParam String _h) {
         try {
@@ -108,6 +128,7 @@ public class VdianController {
 
     @CrossOrigin
     @ApiOperation(value = "订阅微店消息", notes = "接收微店订单消息的推送")
+    @ResponseBody
     @RequestMapping(value = "/push/receive", method = {RequestMethod.GET, RequestMethod.POST})
     public String getVdianPush(@RequestParam String content) {
         try {
@@ -123,6 +144,7 @@ public class VdianController {
 
     @CrossOrigin
     @ApiOperation(value = "订单推送回调接口", notes = "固守成功处理推送的消息后，调用改回调接口")
+    @ResponseBody
     @RequestMapping(value = "/orderCallback", method = {RequestMethod.GET})
     public BaseResponse callback(@RequestParam String query_param,@RequestParam String _h) {
         try {
@@ -139,6 +161,7 @@ public class VdianController {
 
     @CrossOrigin
     @ApiOperation(value = "拉取用户下单数据", notes = "根据条件返回订单")
+    @ResponseBody
     @RequestMapping(value = "/pull/user/order", method = {RequestMethod.GET})
     public BaseResponse userOrder(@RequestParam String query_param,@RequestParam String _h) {
         try {

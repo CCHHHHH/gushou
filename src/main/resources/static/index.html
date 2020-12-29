@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form>
+    手机号码: <input type="search" id="telephone" /><br/>
+    备注信息: <input type="search" id="noteName" /><br/>
+    性别: <input id="man" type="radio" name="sex" value="男"/>男&nbsp;<input id="woman" type="radio" name="sex" value="女"/>女<br/>
+    生日: <input type="date" id="birthday"/><br/>
+    <input type="hidden" id="query_name"/><br/>
+</form>
+</body>
+
+</html>
+<script>
+    console.log(window.location.search)
+    document.getElementById("query_name").value=window.location.search
+</script>
