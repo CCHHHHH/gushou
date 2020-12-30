@@ -57,7 +57,7 @@ public class VdianController {
     @CrossOrigin
     @ApiOperation(value = "绑定用户", notes = "绑定用户")
     @ResponseBody
-    @RequestMapping(value = "/registerUser", method = RequestMethod.GET)
+    @RequestMapping(value = "/registerUser", method = RequestMethod.POST)
     public BaseResponse getToken(@RequestParam String query_param, @RequestParam String info, @RequestParam String _h) {
         try {
 
