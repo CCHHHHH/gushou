@@ -75,7 +75,7 @@ public class VdianController {
 
         } catch (Exception e) {
             log.error("绑定用户失败", e);
-            return BaseResponse.initErrorBaseResponse("绑定用户失败：" + e.getMessage());
+            return BaseResponse.initErrorBaseResponse("绑定用户失败");
         }
     }
 
@@ -93,7 +93,7 @@ public class VdianController {
             return BaseResponse.initErrorBaseResponse("刷新Token失败");
         } catch (Exception e) {
             log.error("获取Token异常", e);
-            return BaseResponse.initErrorBaseResponse("获取Token异常：" + e.getMessage());
+            return BaseResponse.initErrorBaseResponse("获取Token异常");
         }
     }
 
@@ -111,7 +111,7 @@ public class VdianController {
             return BaseResponse.initSuccessBaseResponse(itemSalesTop);
         } catch (Exception e) {
             log.error("获取数据异常", e);
-            return BaseResponse.initErrorBaseResponse("获取数据异常：" + e.getMessage());
+            return BaseResponse.initErrorBaseResponse("获取数据异常");
         }
     }
 
@@ -129,7 +129,7 @@ public class VdianController {
             return BaseResponse.initSuccessBaseResponse(itemDetail);
         } catch (Exception e) {
             log.error("获取数据异常", e);
-            return BaseResponse.initErrorBaseResponse("获取数据异常：" + e.getMessage());
+            return BaseResponse.initErrorBaseResponse("获取数据异常");
         }
     }
 
@@ -162,7 +162,7 @@ public class VdianController {
             return BaseResponse.initSuccessBaseResponse("成功");
         } catch (Exception e) {
             log.error("回调接口异常", e);
-            return BaseResponse.initErrorBaseResponse("失败" + e.getMessage());
+            return BaseResponse.initErrorBaseResponse("失败");
         }
     }
 
@@ -180,7 +180,7 @@ public class VdianController {
             return BaseResponse.initSuccessBaseResponse(orderVos);
         } catch (Exception e) {
             log.error("查询用户订单接口", e);
-            return BaseResponse.initErrorBaseResponse("失败" + e.getMessage());
+            return BaseResponse.initErrorBaseResponse("失败");
         }
     }
 }
