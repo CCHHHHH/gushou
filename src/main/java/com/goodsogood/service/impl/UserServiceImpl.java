@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.goodsogood.config.VdianGetToken;
 import com.goodsogood.domain.User;
+import com.goodsogood.entity.UserInfo;
 import com.goodsogood.mapper.UserMapper;
 import com.goodsogood.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -28,7 +29,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private VdianRestUtil vdianRestUtil;
 
     @Override
-    public String register(String content, String info) {
+    public String register(String content, String info, UserInfo userInfo) {
 
         JSONObject contentJson = JSONObject.parseObject(content);
         String nick_name = contentJson.getString("nick_name");
@@ -37,6 +38,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         //判断用户是否第一次登录
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+
         userQueryWrapper.eq("openid", openid);
         if (this.count(userQueryWrapper) > 0) {
             return "用户已绑定";
@@ -45,10 +47,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         //调用微店api，注册新用户
         HashMap<String, Object> param = new HashMap<>();
-        param.put("telephone", "13899999992");
-//        param.put("noteName","");
-//        param.put("gender",1);
-//        param.put("birthday","");
+        param.put("telephone", userInfo.getTelephone());
+        param.put("noteName", userInfo.getNoteName());
+        param.put("gender", userInfo.getGender());
+        param.put("birthday", userInfo.getBirthday());
 //        param.put("weixin","");
 //        param.put("street","");
 

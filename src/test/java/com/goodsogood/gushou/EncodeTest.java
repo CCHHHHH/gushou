@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
  **/
 public class EncodeTest {
     @Test
-    public void test1(){
+    public void test1() {
         ByteBuffer encode = Charset.forName("UTF-8").encode("陈昊");
         byte[] array = encode.array();
         for (byte b : array) {
@@ -24,9 +24,22 @@ public class EncodeTest {
     }
 
     @Test
-    public void bytes(){
-        byte[] bytes = {(byte) 0x13,(byte) 0x01};
+    public void bytes() {
+        byte[] bytes = {(byte) 0x13, (byte) 0x01};
         String s = new String(bytes);
         System.out.println(s);
+    }
+
+    @Test
+    public void param() {
+        String param = "?query_param=chenhaoxxxxx1&info=haochenxxxxx2&_h=dsadasdadsad";
+        int i = param.indexOf("&info=");
+        String query_param = param.substring(13, i);
+        int j = param.indexOf("&_h=");
+        String info = param.substring(i + 6, j);
+        String _h = param.substring(j + 4);
+        System.out.println(query_param);
+        System.out.println(info);
+        System.out.println(_h);
     }
 }

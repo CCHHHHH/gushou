@@ -2,6 +2,7 @@ package com.goodsogood.service;
 
 import com.goodsogood.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.goodsogood.entity.UserInfo;
 
 /**
  * <p>
@@ -19,7 +20,7 @@ public interface IUserService extends IService<User> {
      * @param info
      * @return
      */
-    String register(String content, String info);
+    String register(String content, String info, UserInfo userInfo);
 
     /**
      * 更加微店用户id，获取固守用户
