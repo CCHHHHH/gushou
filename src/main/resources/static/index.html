@@ -19,7 +19,7 @@
         height: 80%;
         padding: 40px;
         font-weight: bold;
-        background: #2e6da4;
+        background: rgb(217, 62, 39);
         border-radius: 10px;
         color: #FFF;
     }
@@ -33,7 +33,7 @@
         width: 20%;
         display: inline-block;
         font-family: "宋体";
-        font-size: 16px;
+        font-size: 18px;
         text-align: right;
     }
 
@@ -49,14 +49,32 @@
         outline: none;
     }
 
+    .form-group span.required {
+        color: #999;
+    }
+    #footer {
+        height: 40px;
+        line-height: 40px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        background: #333;
+        color: #fff;
+        font-family: Arial;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
 </style>
 <body>
 <div>
     <form class="form-horizontal" role="form" id="form1" method="post">
         <fieldset>
-            <legend style="text-align: center;font-size:24px;font-weight: bold">信息录入</legend>
+            <legend style="text-align: center;font-size:26px;font-weight: bold;color: white">平台用户信息录入</legend>
             <div class="form-group" style="padding-top: 10px">
                 <label for="telephone" class="col-sm-2 control-label">手机号码</label>
+                <span class="required">*</span>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="telephone"
                            placeholder="请输入手机号" required="required" name="telephone">
@@ -97,16 +115,21 @@
     </form>
 
 </div>
-
+<div id="footer">CopyRight@copy固守2020 </div>
 </body>
 
 </html>
 <script>
-    $("#telephone1").on('blur',function () {
-        let phone =  document.getElementById("telephone1").value;
+    $("#telephone").on('blur',function () {
+        let obj = document.getElementById("telephone");
+        let phone =  document.getElementById("telephone").value;
+        console.log("获取的手机号是："+phone);
         let ab = /^[1][3,4,5,7,8][0-9]{9}$/;
-        if (ab.test(phone) == false && phone.length>0) {
+        if (phone.length === 0){
+            alert("请填写手机号！")
+        } else if (ab.test(phone) == false && phone.length>0) {
             alert("请正确填写手机号码!", { icon: 5, offset: '200px',color:'red' });
+            obj.value = "";
             return false;
         }
     });
@@ -133,7 +156,7 @@
                 ;
             },
             error : function() {
-                alert("异常！");
+                alert("填写信息有误！");
             }
         });
     }
