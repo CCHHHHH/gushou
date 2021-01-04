@@ -57,9 +57,8 @@ public class VdianController {
 
     @CrossOrigin
     @ApiOperation(value = "绑定用户", notes = "绑定用户")
-    @ResponseBody
     @RequestMapping(value = "/registerUser", method = RequestMethod.POST)
-    public BaseResponse getToken(@RequestBody UserInfo userInfo) {
+    public String getToken(@RequestBody UserInfo userInfo) {
         try {
             String param = userInfo.getParam();
             int i = param.indexOf("&info=");
@@ -71,11 +70,11 @@ public class VdianController {
             String body = DataEncryption.decryption(_h, query_param);
 
             String flag = userService.register(body, info, userInfo);
-            return BaseResponse.initSuccessBaseResponse(flag);
+            return "redirect:https://shop1730285288.v.weidian.com/?userid=1730285288&pid=1607924749361&urlIntercept=0&pageType=0";
 
         } catch (Exception e) {
             log.error("绑定用户失败", e);
-            return BaseResponse.initErrorBaseResponse("绑定用户失败");
+            return "绑定用户失败";
         }
     }
 
