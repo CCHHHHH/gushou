@@ -56,15 +56,15 @@ public class GushouRestUtil {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("application/json;charset=UTF-8"));
 
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("data",ser.get(1));
-        System.out.println("加密的消息体body:"+ser.get(1));
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("data", ser.get(1));
+        System.out.println("加密的消息体：" + ser.get(1));
 
         String url1 = gushouApiUrl + url + "?_h=" + re + "&info=" + info;
         System.out.println(re);
         System.out.println(url1);
 
-        HttpEntity<Map<String, Object>> objectHttpEntity = new HttpEntity<>(map,headers);
+        HttpEntity<MultiValueMap<String, String>> objectHttpEntity = new HttpEntity<>(map, headers);
 
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(url1, objectHttpEntity, String.class);
 

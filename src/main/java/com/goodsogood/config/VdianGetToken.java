@@ -16,10 +16,10 @@ public class VdianGetToken {
     @Autowired
     private VdianRestUtil vdianRestUtil;
 
-    public static String token = "fde2d764210d0b630eeb4802fc29de000009220298";
+    public static String token;
 
     //TODO 上线别忘了放开注释
-//    @PostConstruct
+    @PostConstruct
     public void init() {
         token = vdianRestUtil.getToken();
         System.out.println(token);
@@ -31,7 +31,7 @@ public class VdianGetToken {
     }
     //每天凌晨俩点刷新一次token
     //TODO 这里的注释也要放开
-//    @Scheduled(cron = "0 0 2 * * ?")
+    @Scheduled(cron = "0 0 2 * * ?")
     public void refresh() {
         init();
     }

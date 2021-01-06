@@ -1,6 +1,7 @@
 package com.goodsogood.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.util.Map;
  * 日期：12/16/20 2:40 PM
  **/
 @Component
+@Slf4j
 public class VdianRestUtil {
 
     @Value("${vdian.appKey}")
@@ -32,11 +34,20 @@ public class VdianRestUtil {
      * @return token
      */
     public String getToken() {
+        String access_token = null;
+        try {
         String url = "https://oauth.open.weidian.com/token?grant_type=client_credential&appkey=" + appKey + "&secret=" + appSecret;
+        log.info("url======="+url);
         String response = restTemplate.getForObject(url, String.class);
         JSONObject jsonObject = JSONObject.parseObject(response);
         JSONObject result = jsonObject.getJSONObject("result");
-        return result.getString("access_token");
+        log.info("获取token返回的值："+result.toJSONString());
+        access_token = result.getString("access_token");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return access_token;
     }
 
     /**

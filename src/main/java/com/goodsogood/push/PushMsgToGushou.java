@@ -97,7 +97,7 @@ public class PushMsgToGushou {
 
     //定时推送未推送的订单
     //TODO 上线放开注释
-//    @Scheduled(cron = "0 0 2 * * ?")
+    @Scheduled(cron = "0 0 2 * * ?")
     public void taskPushMsg(){
         //查询未推送的订单
         try {

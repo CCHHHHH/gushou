@@ -45,7 +45,7 @@ public class DataEncryption {
         Integer r = null;
         try {
             System.out.println("原文：" + content);
-            //生成随机hash
+            //生成随机hash  TODO 生成九位数hash值
 //            Integer randomHash = Math.abs(DataEncryption.SDBMHash(DataEncryption.getRandomStr(8)));
             Integer randomHash = 123781021;
 
