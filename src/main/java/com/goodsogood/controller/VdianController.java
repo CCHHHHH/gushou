@@ -155,9 +155,9 @@ public class VdianController {
     @ApiOperation(value = "订单推送回调接口", notes = "固守成功处理推送的消息后，调用改回调接口")
     @ResponseBody
     @RequestMapping(value = "/orderCallback", method = {RequestMethod.POST})
-    public BaseResponse callback(@RequestParam String query_param, @RequestParam String _h) {
+    public BaseResponse callback(@RequestParam String data, @RequestParam String _h) {
         try {
-            String body = DataEncryption.decryption(_h, query_param);
+            String body = DataEncryption.decryption(_h, data);
             JSONObject jsonObject = JSONObject.parseObject(body);
 
             boolean callback = IVdianService.callback(jsonObject.getString("token"));

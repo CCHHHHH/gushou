@@ -46,8 +46,8 @@ public class DataEncryption {
         try {
             System.out.println("原文：" + content);
             //生成随机hash  TODO 生成九位数hash值
-//            Integer randomHash = Math.abs(DataEncryption.SDBMHash(DataEncryption.getRandomStr(8)));
-            Integer randomHash = 123781021;
+            Integer randomHash = Math.abs(DataEncryption.SDBMHash(DataEncryption.getRandomStr(8)));
+            //Integer randomHash = 123781021;
 
             System.out.println("randomHash:"+randomHash);
             //约定的偏移量(测试环境与正式环境不一样,由固守方提供)
