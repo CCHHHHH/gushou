@@ -88,12 +88,12 @@ public class VdianServiceImpl implements IVdianService {
                 cateNames += cate.getCate_name() + ",";
             }
             itemSalesTop.setClassify(cateNames.substring(0,cateNames.length()-1));
-            itemSalesTop.setSub_class("");
+            itemSalesTop.setSub_class(cateNames.substring(0,cateNames.length()-1));
             itemSalesTop.setDescription(item.getItem_desc());
-            itemSalesTop.setArea("");
+            itemSalesTop.setArea("重庆");
             itemSalesTop.setCompany("");
             itemSalesTop.setCompany_logo("");
-            itemSalesTop.setStandard("");
+            itemSalesTop.setStandard("无");
             itemSalesTop.setMemo("");
             itemSalesTop.setDetail(result1.getString("text"));
             itemSalesTop.setPublish(item.getStatus()==2?0:item.getStatus()==1?1:3);
@@ -256,11 +256,15 @@ public class VdianServiceImpl implements IVdianService {
         for (OrderInfo orderInfo : orderInfos) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
+            String openid = orderInfo.getOpenid();
+            User user = userService.getBuyer(openid);
+
             OrderVo orderVo = new OrderVo();
             BeanUtils.copyProperties(orderInfo,orderVo);
             orderVo.setOrder_type(orderInfo.getOrderType());
             orderVo.setOrder_id(orderInfo.getOrderId());
             orderVo.setTrading_time(simpleDateFormat.format(orderInfo.getTradingTime()));
+            orderVo.setInfo(user.getInfo());
 
             QueryWrapper<Commodity> commodityQueryWrapper = new QueryWrapper<>();
             commodityQueryWrapper.eq("order_id",orderInfo.getOrderId());

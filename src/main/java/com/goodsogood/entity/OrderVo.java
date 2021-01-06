@@ -29,4 +29,6 @@ public class OrderVo {
     private String order_type;
 
     private List<CommodityVo> order_commodity;
+
+    private String info;
 }
