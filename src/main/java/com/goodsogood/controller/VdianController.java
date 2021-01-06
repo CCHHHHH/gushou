@@ -113,7 +113,7 @@ public class VdianController {
             return BaseResponse.initSuccessBaseResponse(itemSalesTop);
         } catch (Exception e) {
             log.error("获取数据异常", e);
-            return BaseResponse.initErrorBaseResponse("获取数据异常");
+            return BaseResponse.initErrorBaseResponse("获取数据异常:"+e.getMessage());
         }
     }
 
@@ -131,7 +131,7 @@ public class VdianController {
             return BaseResponse.initSuccessBaseResponse(itemDetail);
         } catch (Exception e) {
             log.error("获取数据异常", e);
-            return BaseResponse.initErrorBaseResponse("获取数据异常");
+            return BaseResponse.initErrorBaseResponse("获取数据异常:"+e.getMessage());
         }
     }
 
@@ -164,7 +164,7 @@ public class VdianController {
             return BaseResponse.initSuccessBaseResponse("成功");
         } catch (Exception e) {
             log.error("回调接口异常", e);
-            return BaseResponse.initErrorBaseResponse("失败");
+            return BaseResponse.initErrorBaseResponse("失败:"+e.getMessage());
         }
     }
 
@@ -182,7 +182,7 @@ public class VdianController {
             return BaseResponse.initSuccessBaseResponse(orderVos);
         } catch (Exception e) {
             log.error("查询用户订单接口", e);
-            return BaseResponse.initErrorBaseResponse("失败");
+            return BaseResponse.initErrorBaseResponse("失败:"+e.getMessage());
         }
     }
 }

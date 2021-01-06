@@ -225,6 +225,11 @@ public class VdianServiceImpl implements IVdianService {
         QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper<>();
         orderInfoQueryWrapper.eq("token",token);
         OrderInfo orderInfo = orderService.getOne(orderInfoQueryWrapper);
+
+        if (orderInfo == null){
+            throw new RuntimeException("传递的该token不存在");
+        }
+
         orderInfo.setPush(1);
 
         return orderService.updateById(orderInfo);
