@@ -48,7 +48,7 @@ public class VdianController {
     public String redirect(@RequestParam String query_param, @RequestParam String info, @RequestParam String _h) {
         try {
 
-            return "redirect:index.html?query_param=" + query_param + "&info=" + info + "&_h=" + _h;
+            return "redirect:userinfo.html?query_param=" + query_param + "&info=" + info + "&_h=" + _h;
 
         } catch (Exception e) {
             return "";
@@ -70,6 +70,9 @@ public class VdianController {
             String body = DataEncryption.decryption(_h, query_param);
 
             String flag = userService.register(body, info, userInfo);
+            //3秒后跳转页面
+            Thread.currentThread().sleep(3000);
+
             return "redirect:https://shop1730285288.v.weidian.com/?userid=1730285288&pid=1607924749361&urlIntercept=0&pageType=0";
 
         } catch (Exception e) {
@@ -151,7 +154,7 @@ public class VdianController {
     @CrossOrigin
     @ApiOperation(value = "订单推送回调接口", notes = "固守成功处理推送的消息后，调用改回调接口")
     @ResponseBody
-    @RequestMapping(value = "/orderCallback", method = {RequestMethod.GET})
+    @RequestMapping(value = "/orderCallback", method = {RequestMethod.POST})
     public BaseResponse callback(@RequestParam String query_param, @RequestParam String _h) {
         try {
             String body = DataEncryption.decryption(_h, query_param);
