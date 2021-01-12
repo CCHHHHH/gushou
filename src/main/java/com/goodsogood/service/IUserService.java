@@ -35,4 +35,13 @@ public interface IUserService extends IService<User> {
      * @return
      */
     User getBuyer(String openid);
+
+    /**
+     * 判断用户是否已绑定，如果已绑定，先更新info，再直接跳转微店首页
+     * @param content
+     * @param info
+     * @param _h
+     * @return true代表用户未绑定，需要跳转到注册页进行用户绑定。false代表用户已绑定，更新info信息，并跳转微店首页
+     */
+    boolean binding(String content, String info,String _h) throws Exception;
 }

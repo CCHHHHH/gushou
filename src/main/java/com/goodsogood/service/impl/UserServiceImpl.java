@@ -8,6 +8,7 @@ import com.goodsogood.entity.UserInfo;
 import com.goodsogood.mapper.UserMapper;
 import com.goodsogood.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.goodsogood.utils.DataEncryption;
 import com.goodsogood.utils.VdianRestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,5 +91,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         userQueryWrapper.eq("openid", openid);
 
         return this.getBaseMapper().selectOne(userQueryWrapper);
+    }
+
+    @Override
+    public boolean binding(String content, String info, String _h) throws Exception{
+        String data = DataEncryption.decryption(_h, content);
+        JSONObject contentJson = JSONObject.parseObject(data);
+        String openid = contentJson.getString("openid");
+
+        //判断用户是否第一次登录
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("openid", openid);
+        User user = this.getOne(userQueryWrapper);
+
+        //更新用户的info信息
+        if (user != null) {
+            user.setInfo(info);
+            this.updateById(user);
+            return false;
+        }
+
+        return true;
     }
 }
