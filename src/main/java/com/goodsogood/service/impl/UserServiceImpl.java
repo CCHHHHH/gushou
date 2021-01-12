@@ -69,10 +69,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setAccessKey(access_key);
         user.setOpenid(openid);
         user.setInfo(info);
+        user.setPhone(userInfo.getTelephone());
         user.setBuyerId(result.getString("buyerId"));
 
         int insert = this.baseMapper.insert(user);
-
 
         return insert > 0 ? "用户绑定成功" : "用户绑定失败，请重试";
     }
@@ -82,6 +82,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("buyer_id", buyerId);
 
+        return this.getBaseMapper().selectOne(userQueryWrapper);
+    }
+
+    @Override
+    public User getUserByPhone(String phone) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("phone", phone);
         return this.getBaseMapper().selectOne(userQueryWrapper);
     }
 
