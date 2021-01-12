@@ -149,14 +149,12 @@
                 param:$("#query_param").val()
             }),
             success: function (result) {
-                console.log(result);//打印服务端返回的数据(调试用)
-                if (result.code == 200) {
-                    alert("SUCCESS！将在3秒后进入主页！");
-                }
-                ;
-            },
-            error : function() {
-                alert("填写信息有误！");
+                console.log("得到的返回值是"+result);//打印服务端返回的数据(调试用)
+                if (result==200) {
+                    alert("绑定成功！即将进入主页！");
+                    window.location.href = "https://shop1730285288.v.weidian.com/?userid=1730285288&pid=1607924749361&urlIntercept=0&pageType=0";
+
+                };
             }
         });
     }
