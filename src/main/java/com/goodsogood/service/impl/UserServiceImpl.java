@@ -40,29 +40,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //判断用户是否第一次登录
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
 
-        userQueryWrapper.eq("openid", openid);
+        userQueryWrapper.eq("phone",userInfo.getTelephone());
         if (this.count(userQueryWrapper) > 0) {
-            return "用户已绑定";
+            return "该用户号码已绑定";
         }
 
 
         //调用微店api，注册新用户
-        HashMap<String, Object> param = new HashMap<>();
-        param.put("telephone", userInfo.getTelephone());
-        param.put("noteName", userInfo.getNoteName());
-        param.put("gender", userInfo.getGender());
-        param.put("birthday", userInfo.getBirthday());
-//        param.put("weixin","");
-//        param.put("street","");
-
-        HashMap<String, Object> paramPublic = new HashMap<>();
-        paramPublic.put("method", "vdian.crm.addCustomer");
-        paramPublic.put("format", "json");
-        paramPublic.put("access_token", VdianGetToken.token);
-        paramPublic.put("version", "1.0");
-
-        JSONObject userJson = vdianRestUtil.getRestApi(param, paramPublic);
-        JSONObject result = userJson.getJSONObject("result");
+//        HashMap<String, Object> param = new HashMap<>();
+//        param.put("telephone", userInfo.getTelephone());
+//        param.put("noteName", userInfo.getNoteName());
+//        param.put("gender", userInfo.getGender());
+//        param.put("birthday", userInfo.getBirthday());
+////        param.put("weixin","");
+////        param.put("street","");
+//
+//        HashMap<String, Object> paramPublic = new HashMap<>();
+//        paramPublic.put("method", "vdian.crm.addCustomer");
+//        paramPublic.put("format", "json");
+//        paramPublic.put("access_token", VdianGetToken.token);
+//        paramPublic.put("version", "1.0");
+//
+//        JSONObject userJson = vdianRestUtil.getRestApi(param, paramPublic);
+//        JSONObject result = userJson.getJSONObject("result");
 
         User user = new User();
         user.setNickName(nick_name);
@@ -70,7 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setOpenid(openid);
         user.setInfo(info);
         user.setPhone(userInfo.getTelephone());
-        user.setBuyerId(result.getString("buyerId"));
+//        user.setBuyerId(result.getString("buyerId"));
 
         int insert = this.baseMapper.insert(user);
 
