@@ -16,7 +16,7 @@ public class VdianGetToken {
     @Autowired
     private VdianRestUtil vdianRestUtil;
 
-    public static String token;
+    public static String token = "cae1fe380163a678feeddbe2c67dcb18000923019b";
 
     //TODO 上线别忘了放开注释
     @PostConstruct

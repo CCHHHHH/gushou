@@ -8,8 +8,10 @@ import com.goodsogood.entity.UserInfo;
 import com.goodsogood.response.BaseResponse;
 import com.goodsogood.service.IUserService;
 import com.goodsogood.service.IVdianService;
+import com.goodsogood.utils.Base64ToStringUtil;
 import com.goodsogood.utils.DataEncryption;
 import com.goodsogood.utils.VdianRestUtil;
+import com.google.common.base.Utf8;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -47,8 +51,10 @@ public class VdianController {
     @RequestMapping(value = "/redirect", method = RequestMethod.GET)
     public String redirect(@RequestParam String query_param, @RequestParam String info, @RequestParam String _h) {
         try {
-
-            return "redirect:userinfo.html?query_param=" + query_param + "&info=" + info + "&_h=" + _h;
+            String query_param1 = URLEncoder.encode(query_param, "utf8");
+            String info1 = URLEncoder.encode(info, "utf8");
+            String _h1 = URLEncoder.encode(_h, "utf8");
+            return  "redirect:userinfo.html?query_param=" + query_param1 + "&info=" + info1 + "&_h=" + _h1;
 
         } catch (Exception e) {
             return "";
@@ -71,7 +77,7 @@ public class VdianController {
 
             String flag = userService.register(body, info, userInfo);
             //3秒后跳转页面
-            Thread.currentThread().sleep(3000);
+            //Thread.currentThread().sleep(3000);
 
             return "redirect:https://shop1730285288.v.weidian.com/?userid=1730285288&pid=1607924749361&urlIntercept=0&pageType=0";
 
