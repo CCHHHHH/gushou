@@ -54,6 +54,8 @@ public class VdianController {
             String query_param1 = URLEncoder.encode(query_param, "utf8");
             String info1 = URLEncoder.encode(info, "utf8");
             String _h1 = URLEncoder.encode(_h, "utf8");
+            //
+
             return  "redirect:userinfo.html?query_param=" + query_param1 + "&info=" + info1 + "&_h=" + _h1;
 
         } catch (Exception e) {
@@ -64,7 +66,7 @@ public class VdianController {
     @CrossOrigin
     @ApiOperation(value = "绑定用户", notes = "绑定用户")
     @RequestMapping(value = "/registerUser", method = RequestMethod.POST)
-    public String getToken(@RequestBody UserInfo userInfo) {
+    public BaseResponse getToken(@RequestBody UserInfo userInfo) {
         try {
             String param = userInfo.getParam();
             int i = param.indexOf("&info=");
@@ -79,11 +81,11 @@ public class VdianController {
             //3秒后跳转页面
             //Thread.currentThread().sleep(3000);
 
-            return "redirect:https://shop1730285288.v.weidian.com/?userid=1730285288&pid=1607924749361&urlIntercept=0&pageType=0";
+            return BaseResponse.initSuccessBaseResponse(flag);
 
         } catch (Exception e) {
             log.error("绑定用户失败", e);
-            return "绑定用户失败";
+            return BaseResponse.initErrorBaseResponse("绑定用户失败");
         }
     }
 
