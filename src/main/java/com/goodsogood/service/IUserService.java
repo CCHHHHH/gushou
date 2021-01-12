@@ -29,6 +29,8 @@ public interface IUserService extends IService<User> {
      */
     User getUser(String buyerId);
 
+    User getUserByPhone(String phone);
+
     /**
      * 更加固守用户openid，获取固守用户
      * @param openid

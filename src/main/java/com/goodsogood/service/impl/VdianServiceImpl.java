@@ -170,10 +170,10 @@ public class VdianServiceImpl implements IVdianService {
             return;
         }
 
-        User user = userService.getUser(receiveMessage.getBuyer_info().getBuyer_id());
+        User user = userService.getUserByPhone(receiveMessage.getBuyer_info().getPhone());
 
         if (user == null){
-            log.error("推送的订单所属用户未绑定。微店用户id："+receiveMessage.getBuyer_info().getBuyer_id());
+            log.error("推送的订单所属用户未绑定。微店用户电话："+receiveMessage.getBuyer_info().getPhone());
             throw new RuntimeException("推送的订单所属用户未绑定。");
         }
 
