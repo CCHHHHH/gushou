@@ -162,11 +162,10 @@ public class VdianServiceImpl implements IVdianService {
     public void paresReceiveMsg(String content) {
         JSONObject contentJson = JSONObject.parseObject(content);
         String type = contentJson.getString("type");
-//        ReceiveMessage receiveMessage = JSONObject.toJavaObject(contentJson.getJSONObject("message"), ReceiveMessage.class);
 
         JSONObject message = JSONObject.parseObject(contentJson.getString("message"));
         JSONObject buyer_info = JSONObject.parseObject(message.getString("buyer_info"));
-        JSONArray items1 = message.getJSONArray("items");
+        JSONArray items = message.getJSONArray("items");
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -175,6 +174,14 @@ public class VdianServiceImpl implements IVdianService {
 
         //只接收 已付款（直接到账）/已付款待发货（担保交易）订单
         if (!type.equals(OrderPushType.WEIDIAN_ORDER_ALREADY_PAYMENT)){
+            return;
+        }
+
+        String order_id = message.getString("order_id");
+        QueryWrapper<OrderInfo> orderInfoQueryWrapper = new QueryWrapper<>();
+        orderInfoQueryWrapper.eq("order_id",order_id);
+        if (orderService.count(orderInfoQueryWrapper) > 0){
+            log.info("推送的订单已存在，订单号："+order_id);
             return;
         }
 
@@ -200,7 +207,7 @@ public class VdianServiceImpl implements IVdianService {
         order.setPush(0);
         order.setDonation(0L);
 
-        for (Object o : items1) {
+        for (Object o : items) {
             String itemStr = JSONObject.toJSONString(o);
             JSONObject item = JSONObject.parseObject(itemStr);
             Commodity commodity = new Commodity();
@@ -223,28 +230,6 @@ public class VdianServiceImpl implements IVdianService {
             commodity.setRecommendType("");
             commodities.add(commodity);
         }
-//        List<ReceiveOrderItems> items = receiveMessage.getItems();
-//        for (ReceiveOrderItems item : items) {
-//            Commodity commodity = new Commodity();
-//
-//            ItemSalesTop itemDetail = getItemDetail(item.getItem_id());
-//
-//            commodity.setOrderId(message.getString("order_id"));
-//            commodity.setCommodityId(item.getItem_id());
-//            commodity.setName(item.getItem_name());
-//            commodity.setClassify(itemDetail.getClassify());
-//            commodity.setSubClass(itemDetail.getClassify());
-//            commodity.setPrice((long)(Double.valueOf(item.getPrice())*100));
-//            commodity.setActualPrice((long)(Double.valueOf(item.getTotal_price())*100));
-//            commodity.setCount(Integer.valueOf(item.getQuantity()));
-//            commodity.setStandard("无");
-//            commodity.setCarriage(Long.valueOf(item.getQuantity()));
-//            commodity.setArea("重庆");
-//            commodity.setCompany(message.getString("seller_name"));
-//            commodity.setType(1);
-//            commodity.setRecommendType("");
-//            commodities.add(commodity);
-//        }
 
         //写入到数据库
         orderService.getBaseMapper().insert(order);
