@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -161,7 +162,14 @@ public class VdianServiceImpl implements IVdianService {
     public void paresReceiveMsg(String content) {
         JSONObject contentJson = JSONObject.parseObject(content);
         String type = contentJson.getString("type");
-        ReceiveMessage receiveMessage = JSONObject.toJavaObject(contentJson.getJSONObject("message"), ReceiveMessage.class);
+//        ReceiveMessage receiveMessage = JSONObject.toJavaObject(contentJson.getJSONObject("message"), ReceiveMessage.class);
+
+        JSONObject message = JSONObject.parseObject(contentJson.getString("message"));
+        JSONObject buyer_info = JSONObject.parseObject(message.getString("buyer_info"));
+        JSONArray items1 = message.getJSONArray("items");
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         OrderInfo order = new OrderInfo();
         List<Commodity> commodities = new ArrayList<>();
 
@@ -170,46 +178,73 @@ public class VdianServiceImpl implements IVdianService {
             return;
         }
 
-        User user = userService.getUserByPhone(receiveMessage.getBuyer_info().getPhone());
+        User user = userService.getUserByPhone(buyer_info.getString("phone"));
 
         if (user == null){
-            log.error("推送的订单所属用户未绑定。微店用户电话："+receiveMessage.getBuyer_info().getPhone());
+            log.error("推送的订单所属用户未绑定。微店用户电话："+buyer_info.getString("phone"));
             throw new RuntimeException("推送的订单所属用户未绑定。");
         }
 
         order.setOpenid(user.getOpenid());
         String token = UUID.randomUUID().toString().replaceAll("-", "");
         order.setToken(token);
-        order.setOrderId(receiveMessage.getOrder_id());
-        order.setTradingTime(receiveMessage.getPay_time());
-        order.setTotalPrice((long)(Double.valueOf(receiveMessage.getPrice())*100));
-        order.setLogistics((long)(Double.valueOf(receiveMessage.getExpress_fee())*100));
+        order.setOrderId(message.getString("order_id"));
+        try {
+            order.setTradingTime(format.parse(message.getString("pay_time")));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        order.setTotalPrice((long)(Double.valueOf(message.getString("price"))*100));
+        order.setLogistics((long)(Double.valueOf(message.getString("express_fee"))*100));
         order.setOrderType(type);
         order.setPush(0);
         order.setDonation(0L);
 
-        List<ReceiveOrderItems> items = receiveMessage.getItems();
-        for (ReceiveOrderItems item : items) {
+        for (Object o : items1) {
+            String itemStr = JSONObject.toJSONString(o);
+            JSONObject item = JSONObject.parseObject(itemStr);
             Commodity commodity = new Commodity();
 
-            ItemSalesTop itemDetail = getItemDetail(item.getItem_id());
+            ItemSalesTop itemDetail = getItemDetail(item.getString("item_id"));
 
-            commodity.setOrderId(receiveMessage.getOrder_id());
-            commodity.setCommodityId(item.getItem_id());
-            commodity.setName(item.getItem_name());
+            commodity.setOrderId(message.getString("order_id"));
+            commodity.setCommodityId(item.getString("item_id"));
+            commodity.setName(item.getString("item_name"));
             commodity.setClassify(itemDetail.getClassify());
             commodity.setSubClass(itemDetail.getClassify());
-            commodity.setPrice((long)(Double.valueOf(item.getPrice())*100));
-            commodity.setActualPrice((long)(Double.valueOf(item.getTotal_price())*100));
-            commodity.setCount(Integer.valueOf(item.getQuantity()));
+            commodity.setPrice((long)(Double.valueOf(item.getString("price"))*100));
+            commodity.setActualPrice((long)(Double.valueOf(item.getString("total_price"))*100));
+            commodity.setCount(Integer.valueOf(item.getString("quantity")));
             commodity.setStandard("无");
-            commodity.setCarriage(Long.valueOf(item.getQuantity()));
+            commodity.setCarriage(0L);
             commodity.setArea("重庆");
-            commodity.setCompany(receiveMessage.getSeller_name());
+            commodity.setCompany(message.getString("seller_name"));
             commodity.setType(1);
             commodity.setRecommendType("");
             commodities.add(commodity);
         }
+//        List<ReceiveOrderItems> items = receiveMessage.getItems();
+//        for (ReceiveOrderItems item : items) {
+//            Commodity commodity = new Commodity();
+//
+//            ItemSalesTop itemDetail = getItemDetail(item.getItem_id());
+//
+//            commodity.setOrderId(message.getString("order_id"));
+//            commodity.setCommodityId(item.getItem_id());
+//            commodity.setName(item.getItem_name());
+//            commodity.setClassify(itemDetail.getClassify());
+//            commodity.setSubClass(itemDetail.getClassify());
+//            commodity.setPrice((long)(Double.valueOf(item.getPrice())*100));
+//            commodity.setActualPrice((long)(Double.valueOf(item.getTotal_price())*100));
+//            commodity.setCount(Integer.valueOf(item.getQuantity()));
+//            commodity.setStandard("无");
+//            commodity.setCarriage(Long.valueOf(item.getQuantity()));
+//            commodity.setArea("重庆");
+//            commodity.setCompany(message.getString("seller_name"));
+//            commodity.setType(1);
+//            commodity.setRecommendType("");
+//            commodities.add(commodity);
+//        }
 
         //写入到数据库
         orderService.getBaseMapper().insert(order);
