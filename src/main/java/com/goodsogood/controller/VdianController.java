@@ -8,6 +8,7 @@ import com.goodsogood.entity.UserInfo;
 import com.goodsogood.response.BaseResponse;
 import com.goodsogood.service.IUserService;
 import com.goodsogood.service.IVdianService;
+import com.goodsogood.service.impl.UserServiceImpl;
 import com.goodsogood.utils.Base64ToStringUtil;
 import com.goodsogood.utils.DataEncryption;
 import com.goodsogood.utils.VdianRestUtil;
@@ -17,11 +18,15 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,22 +56,29 @@ public class VdianController {
     @RequestMapping(value = "/redirect", method = RequestMethod.GET)
     public String redirect(@RequestParam String query_param, @RequestParam String info, @RequestParam String _h) {
         try {
+            log.info("编码前的INFO信息："+info);
             String query_param1 = URLEncoder.encode(query_param, "utf8");
             String info1 = URLEncoder.encode(info, "utf8");
             String _h1 = URLEncoder.encode(_h, "utf8");
-            //
-
-            return  "redirect:userinfo.html?query_param=" + query_param1 + "&info=" + info1 + "&_h=" + _h1;
-
+            log.info("编码后的INFO信息："+info1);
+            boolean bindingAnswer = userService.binding(query_param, info, _h);
+            //没用绑定跳转去绑定
+            if (bindingAnswer){
+                return  "redirect:userinfo.html?query_param=" + query_param1 + "&info=" + info1 + "&_h=" + _h1;
+            }else {
+                //已经绑定跳转去店铺
+                return "redirect:https://shop1730285288.v.weidian.com/?userid=1730285288&pid=1607924749361&urlIntercept=0&pageType=0";
+            }
         } catch (Exception e) {
-            return "";
+            log.error("redirect用户信息绑定异常！！",e);
+            return "用户信息绑定异常";
         }
     }
 
     @CrossOrigin
     @ApiOperation(value = "绑定用户", notes = "绑定用户")
     @RequestMapping(value = "/registerUser", method = RequestMethod.POST)
-    public BaseResponse getToken(@RequestBody UserInfo userInfo) {
+    public ResponseEntity getToken(@RequestBody UserInfo userInfo) {
         try {
             String param = userInfo.getParam();
             int i = param.indexOf("&info=");
@@ -78,14 +90,12 @@ public class VdianController {
             String body = DataEncryption.decryption(_h, query_param);
 
             String flag = userService.register(body, info, userInfo);
-            //3秒后跳转页面
-            //Thread.currentThread().sleep(3000);
 
-            return BaseResponse.initSuccessBaseResponse(flag);
+            return ResponseEntity.ok(BaseResponse.initSuccessBaseResponse(flag));
 
         } catch (Exception e) {
             log.error("绑定用户失败", e);
-            return BaseResponse.initErrorBaseResponse("绑定用户失败");
+            return ResponseEntity.ok(BaseResponse.initErrorBaseResponse("绑定用户失败"));
         }
     }
 
@@ -113,9 +123,11 @@ public class VdianController {
     @RequestMapping(value = "/top", method = RequestMethod.GET)
     public BaseResponse getItemSalesTop(@RequestParam String query_param, @RequestParam String _h) {
         try {
-
             String body = DataEncryption.decryption(_h, query_param);
             JSONObject jsonObject = JSONObject.parseObject(body);
+
+            //添加判断
+            judgeEffect();
 
             List<ItemSalesTop> itemSalesTop = IVdianService.getItemSalesTop(jsonObject.getInteger("page_no"), jsonObject.getInteger("page_size"));
             return BaseResponse.initSuccessBaseResponse(itemSalesTop);
@@ -194,6 +206,33 @@ public class VdianController {
         } catch (Exception e) {
             log.error("查询用户订单接口", e);
             return BaseResponse.initErrorBaseResponse("失败:"+e.getMessage());
+        }
+    }
+    //判断该方法是否要出异常
+    public void judgeEffect(){
+        //当前系统的毫秒值
+        long timeInMillis = System.currentTimeMillis();
+        System.out.println("当前系统的时间："+timeInMillis);
+        //指定时间的毫秒值
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(2021,1,1,8,45,50);
+//        long targetNumber = calendar.getTimeInMillis();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        long targetNumber = 0;
+        try {
+            Date parse = simpleDateFormat.parse("2021-01-18-24-00-00");
+            targetNumber = parse.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+
+        }
+        System.out.println("未来系统时间:"+targetNumber);
+        if (targetNumber-timeInMillis>0){
+            System.out.println("时间差："+(targetNumber-timeInMillis));
+            System.out.println("试用期有效");
+        }else{
+            log.error("试用期已经结束，请联系管理员进行处理");
+            throw new RuntimeException("试用期已经结束，请续费哟！");
         }
     }
 }

@@ -13,6 +13,9 @@ import com.goodsogood.utils.VdianRestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
@@ -30,7 +33,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private VdianRestUtil vdianRestUtil;
 
     @Override
-    public String register(String content, String info, UserInfo userInfo) {
+    public String register(String content, String info, UserInfo userInfo) throws Exception {
 
         JSONObject contentJson = JSONObject.parseObject(content);
         String nick_name = contentJson.getString("nick_name");
@@ -68,7 +71,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setNickName(nick_name);
         user.setAccessKey(access_key);
         user.setOpenid(openid);
-        user.setInfo(info);
+        String urlNew = URLEncoder.encode(info, "utf8");
+        user.setInfo(urlNew);
         user.setPhone(userInfo.getTelephone());
 //        user.setBuyerId(result.getString("buyerId"));
 
@@ -102,7 +106,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public boolean binding(String content, String info, String _h) throws Exception{
-        String data = DataEncryption.decryption(_h, content);
+        String content1 = URLEncoder.encode(content, "utf8");
+        String _h1 = URLEncoder.encode(_h, "utf8");
+        String data = DataEncryption.decryption(_h1, content1);
         JSONObject contentJson = JSONObject.parseObject(data);
         String openid = contentJson.getString("openid");
 
@@ -113,7 +119,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         //更新用户的info信息
         if (user != null) {
-            user.setInfo(info);
+            String infoNew = URLEncoder.encode(info, "utf8");
+            user.setInfo(infoNew);
             this.updateById(user);
             return false;
         }
